@@ -5,18 +5,6 @@ top_1500_steam, all_55000_steam, metacritic = data['top_1500_steam'], data['all_
 
 st.title("About the Data")
 
-st.header("Introduction")
-
-st.write("")
-
-st.header("🌟Goal🌟")
-
-st.write(
-    """
-        The goal of my project is to identify key factors of game success using data driven tools and insights to enable current game developers to make more informed decisions for their development strategy.
-    """
-)
-
 # Datasets Overview
 st.header("Datasets Overview")
 

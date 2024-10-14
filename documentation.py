@@ -9,12 +9,13 @@ st.markdown(
     """
     - `name`: Game title
     - `release_date`: Release date of the game
-    - `developer`: Game developer(s)
-    - `publisher`: Game publisher(s)
-    - `price`: Price of the game
-    - `revenue`: An estimate of total revenue generated
-    - `owners`: An estimate of the number of game owners
-    - `genre`: Genre(s) of the game
+    - `copies_sold`: Total number of copies sold (estimated<sup>1</sup>)
+    - `price`: Original retail price of the game at release
+    - `revenue`: The amount of money generated from the sales of the game (estimated<sup>1</sup>)
+    - `review_score`: The score or rating given to the game based on user and critic reviews (out of 100)
+    - `publisher_class`: A classification of the publisher, indicating whether the publisher is AAA, AA or indie
+    - `publisher`: Game publisher name(s)
+    - `developer`: Game developer name(s) or studio name
     """
 )
 

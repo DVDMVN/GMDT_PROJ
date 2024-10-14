@@ -7,12 +7,15 @@ st.set_page_config(
     page_title="DEADMAN_PROJ",
     page_icon="🥴",
 )
+
+welcome = st.Page("welcome.py", title="Welcome", icon="👋")
 about = st.Page("about.py", title="About the Data", icon="💾")
+top_1500_steam_analysis = st.Page("top_1500_steam_analysis.py", title="Top Steam Games Analysis", icon="🏆")
 developer_hypothesis = st.Page("developer_hypothesis.py", title="Page 3", icon="💀")
 revenue_prediction = st.Page("revenue_prediction.py", title="Page 2", icon="💀")
 documentation = st.Page("documentation.py", title="Documentation", icon="📔")
 
-pg = st.navigation([about, revenue_prediction, developer_hypothesis, documentation])
+pg = st.navigation([welcome, about, top_1500_steam_analysis, revenue_prediction, developer_hypothesis, documentation])
 pg.run()
 
 # st.sidebar.success("Select a demo above.")
