@@ -22,16 +22,27 @@ st.markdown(
 st.write("**All 55,000 Steam Games Dataset Attributes**")
 st.markdown(
     """
+    - `app_id`: The ID of the product as allocated by Steam
     - `name`: Game title
-    - `release_date`: Release date of the game
+    - `short_description`: A small blurb that appears on the product page under the header image
     - `developer`: Game developer(s)
     - `publisher`: Game publisher(s)
+    - `genre`: Genre(s) of the game ('Action', 'Adventure', 'Strategy', etc.)
+    - `tags`: User assigned tags for the game ('Action', 'Multiplayer', 'Shooter', etc.)
+    - `type`: Whether the product is a game or some sort of sortware that is not a game
+    - `categories`: Categories / features the product has ('Single-player', 'PvP', 'Online', etc.)
+    - `owners`: An approximate$^1$ estimate of the number of users who own the game according to Steam Spy
     - `positive_ratings`: Number of positive ratings
     - `negative_ratings`: Number of negative ratings
-    - `average_playtime`: Average playtime in minutes
-    - `price`: Price of the game
-    - `owners`: Number of game owners
-    - `genre`: Genre of the game
+    - `price`: Price of the game in USD
+    - `initial_price`: Price of the game in USD at launch
+    - `discount`: Percentage of sale at the time of the snapshot
+    - `ccu`: Peak concurrent player count for the game
+    - `languages`: Languages supported by the game
+    - `release_date`: Release date of the game
+    - `required_age`: The required user age minimum for the game
+    - `website`: The website of the developer/publisher of the product
+    - `header_image`: A link to the header image of the game
     """
 )
 

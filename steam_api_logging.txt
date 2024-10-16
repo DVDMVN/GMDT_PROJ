@@ -1,0 +1,420 @@
+Successfully loaded 1600 app details | time: 2024-10-14 20:48:47.910083
+Successfully loaded 100 app details | time: 2024-10-14 22:08:34.266541
+Successfully loaded 200 app details | time: 2024-10-14 22:09:00.013870
+Successfully loaded 100 app details | time: 2024-10-14 23:38:46.286211
+Successfully loaded 200 app details | time: 2024-10-14 23:39:09.848461
+Successfully loaded 100 app details | time: 2024-10-14 23:45:44.225411
+Successfully loaded 200 app details | time: 2024-10-14 23:46:06.807265
+2024-10-14 23:46:07.745505 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:46:37.990059 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:47:11.213282 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:47:47.732086 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:48:27.889853 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:49:12.097343 - Error: Failed to retrieve data for app ID 1195270
+2024-10-14 23:50:00.643900 - Error: Failed to retrieve data for app ID 1195270
+Successfully loaded 300 app details | time: 2024-10-14 23:51:17.166009
+Successfully loaded 400 app details | time: 2024-10-14 23:51:40.456534
+2024-10-14 23:51:41.638477 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:52:11.846496 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:52:45.051770 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:53:21.556547 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:54:01.705680 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:54:45.836598 - Error: Failed to retrieve data for app ID 1523690
+2024-10-14 23:55:34.410280 - Error: Failed to retrieve data for app ID 1523690
+Successfully loaded 500 app details | time: 2024-10-14 23:56:49.231377
+Successfully loaded 600 app details | time: 2024-10-14 23:57:11.855880
+2024-10-14 23:57:13.350223 - Error: Failed to retrieve data for app ID 223630
+2024-10-14 23:57:43.564133 - Error: Failed to retrieve data for app ID 223630
+2024-10-14 23:58:16.769123 - Error: Failed to retrieve data for app ID 223630
+2024-10-14 23:58:53.279950 - Error: Failed to retrieve data for app ID 223630
+2024-10-14 23:59:33.417366 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 00:00:17.548222 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 00:01:06.081971 - Error: Failed to retrieve data for app ID 223630
+Successfully loaded 700 app details | time: 2024-10-15 00:02:21.915301
+Successfully loaded 800 app details | time: 2024-10-15 00:02:45.307507
+2024-10-15 00:02:47.835845 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:03:18.057879 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:03:51.264578 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:04:27.758886 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:05:07.920452 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:05:52.062048 - Error: Failed to retrieve data for app ID 377350
+2024-10-15 00:06:40.602974 - Error: Failed to retrieve data for app ID 377350
+Successfully loaded 900 app details | time: 2024-10-15 00:07:54.253419
+2024-10-15 00:08:05.554966 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:08:35.789802 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:09:09.006764 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:09:45.520855 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:10:25.695001 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:11:09.838340 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:11:58.388614 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:12:51.759165 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:13:50.453891 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:14:55.021334 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:14:55.022333 - Max Retries exceeded: Failed to retrieve data for app ID 499450 returning None:
+Successfully loaded 100 app details | time: 2024-10-15 00:24:40.997577
+Successfully loaded 200 app details | time: 2024-10-15 00:25:03.168806
+2024-10-15 00:25:03.831217 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:25:34.073798 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:26:05.790206 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:26:39.087193 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:27:14.023252 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:27:50.694897 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:28:29.221103 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 00:29:09.636520 - Error: Failed to retrieve data for app ID 1194120
+Successfully loaded 300 app details | time: 2024-10-15 00:30:14.431989
+Successfully loaded 400 app details | time: 2024-10-15 00:30:36.609167
+2024-10-15 00:30:38.568481 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:31:08.784342 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:31:40.497493 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:32:13.780319 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:32:48.730470 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:33:25.402010 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:34:03.910111 - Error: Failed to retrieve data for app ID 1527110
+2024-10-15 00:34:44.358945 - Error: Failed to retrieve data for app ID 1527110
+Successfully loaded 500 app details | time: 2024-10-15 00:35:47.728754
+Successfully loaded 600 app details | time: 2024-10-15 00:36:10.345696
+2024-10-15 00:36:12.488251 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:36:42.697132 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:37:14.418849 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:37:47.743792 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:38:22.690353 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:38:59.373652 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:39:37.878349 - Error: Failed to retrieve data for app ID 224440
+2024-10-15 00:40:18.297099 - Error: Failed to retrieve data for app ID 224440
+Successfully loaded 700 app details | time: 2024-10-15 00:41:21.150421
+Successfully loaded 800 app details | time: 2024-10-15 00:41:43.686513
+2024-10-15 00:41:46.727767 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:42:16.945399 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:42:48.650486 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:43:21.933803 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:43:56.894175 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:44:33.586285 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:45:12.104124 - Error: Failed to retrieve data for app ID 378490
+2024-10-15 00:45:52.528152 - Error: Failed to retrieve data for app ID 378490
+Successfully loaded 900 app details | time: 2024-10-15 00:46:54.059474
+2024-10-15 00:47:04.903537 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:47:35.112911 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:48:06.826480 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:48:40.133404 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:49:15.081801 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:49:51.755791 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:50:30.278252 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:51:10.701799 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:51:53.146875 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:52:37.700903 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:53:24.461637 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:54:13.553951 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:55:05.075698 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:55:59.175668 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:56:55.976671 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:57:55.646021 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 00:58:58.227443 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:00:03.922214 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:01:12.936386 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:02:25.343232 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:02:25.343232 - Max Retries exceeded: Failed to retrieve data for app ID 499450 returning None:
+Successfully loaded 100 app details | time: 2024-10-15 01:33:17.508488
+Successfully loaded 200 app details | time: 2024-10-15 01:33:40.340071
+2024-10-15 01:33:40.659281 - Error: Failed to retrieve data for app ID 1192050
+2024-10-15 01:34:10.871127 - Error: Failed to retrieve data for app ID 1192050
+2024-10-15 01:34:47.116217 - Error: Failed to retrieve data for app ID 1192050
+2024-10-15 01:35:30.534713 - Error: Failed to retrieve data for app ID 1192050
+2024-10-15 01:36:22.586960 - Error: Failed to retrieve data for app ID 1192050
+2024-10-15 01:37:25.008727 - Error: Failed to retrieve data for app ID 1192050
+Successfully loaded 300 app details | time: 2024-10-15 01:39:02.165909
+Successfully loaded 400 app details | time: 2024-10-15 01:39:25.054023
+2024-10-15 01:39:26.666126 - Error: Failed to retrieve data for app ID 1524580
+2024-10-15 01:39:56.904687 - Error: Failed to retrieve data for app ID 1524580
+2024-10-15 01:40:33.140714 - Error: Failed to retrieve data for app ID 1524580
+2024-10-15 01:41:16.553795 - Error: Failed to retrieve data for app ID 1524580
+2024-10-15 01:42:08.604852 - Error: Failed to retrieve data for app ID 1524580
+2024-10-15 01:43:11.038441 - Error: Failed to retrieve data for app ID 1524580
+Successfully loaded 500 app details | time: 2024-10-15 01:44:47.335718
+Successfully loaded 600 app details | time: 2024-10-15 01:45:10.015682
+2024-10-15 01:45:11.587460 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 01:45:41.794402 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 01:46:18.039834 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 01:47:01.444138 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 01:47:53.519044 - Error: Failed to retrieve data for app ID 223630
+2024-10-15 01:48:55.960164 - Error: Failed to retrieve data for app ID 223630
+Successfully loaded 700 app details | time: 2024-10-15 01:50:32.829189
+Successfully loaded 800 app details | time: 2024-10-15 01:50:56.440425
+2024-10-15 01:50:58.402688 - Error: Failed to retrieve data for app ID 377030
+2024-10-15 01:51:28.674015 - Error: Failed to retrieve data for app ID 377030
+2024-10-15 01:52:04.896169 - Error: Failed to retrieve data for app ID 377030
+2024-10-15 01:52:48.310984 - Error: Failed to retrieve data for app ID 377030
+2024-10-15 01:53:40.399928 - Error: Failed to retrieve data for app ID 377030
+2024-10-15 01:54:42.799985 - Error: Failed to retrieve data for app ID 377030
+Successfully loaded 900 app details | time: 2024-10-15 01:56:19.416510
+2024-10-15 01:56:31.461109 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:57:01.688988 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:57:37.906262 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:58:21.324274 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 01:59:13.419879 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:00:15.867595 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:01:30.736033 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:03:00.559608 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:04:48.318559 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:06:57.535450 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 02:09:32.568156 - Error: Failed to retrieve data for app ID 499450
+Successfully loaded 100 app details | time: 2024-10-15 02:14:17.054944
+Successfully loaded 200 app details | time: 2024-10-15 02:14:39.836590
+Successfully loaded 300 app details | time: 2024-10-15 02:14:58.916779
+Successfully loaded 100 app details | time: 2024-10-15 02:20:24.291835
+Successfully loaded 200 app details | time: 2024-10-15 02:20:47.240320
+Successfully loaded 300 app details | time: 2024-10-15 02:21:06.408238
+Successfully loaded 400 app details | time: 2024-10-15 02:21:25.540100
+2024-10-15 02:21:28.571601 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:21:58.709383 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:22:28.855636 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:22:58.995558 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:23:29.172138 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:23:59.313198 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:24:29.491615 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:25:00.641123 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:25:30.805585 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:26:00.940138 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:26:31.085311 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:27:01.217923 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:27:01.218923 - Max Retries exceeded: Expecting value: line 1 column 1 (char 0) returning None:
+2024-10-15 02:27:01.344303 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:27:31.486490 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:28:01.637838 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:28:31.798924 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:29:01.973845 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:29:32.118551 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:30:02.260341 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:30:32.391143 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:31:18.706977 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 500 app details | time: 2024-10-15 02:31:54.183731
+Successfully loaded 600 app details | time: 2024-10-15 02:32:17.301152
+Successfully loaded 700 app details | time: 2024-10-15 02:32:37.816121
+Successfully loaded 800 app details | time: 2024-10-15 02:32:56.638815
+Successfully loaded 900 app details | time: 2024-10-15 02:33:16.123007
+2024-10-15 02:33:28.574018 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:33:58.709075 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:34:28.858379 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:34:58.996190 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:35:29.173002 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:35:59.316595 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:36:29.463917 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:36:59.597376 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:37:29.739520 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:37:59.877948 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:38:30.049054 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:39:00.212869 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:39:00.213869 - Max Retries exceeded: Expecting value: line 1 column 1 (char 0) returning None:
+2024-10-15 02:39:00.333698 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:39:30.484459 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:40:00.634269 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:40:30.774304 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:41:00.898993 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:41:31.157959 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:42:01.293682 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:42:31.446079 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:43:01.603026 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 1000 app details | time: 2024-10-15 02:43:39.349619
+Successfully loaded 1100 app details | time: 2024-10-15 02:44:03.866215
+Successfully loaded 1200 app details | time: 2024-10-15 02:44:25.392339
+Successfully loaded 1300 app details | time: 2024-10-15 02:44:44.461585
+Successfully loaded 1400 app details | time: 2024-10-15 02:45:03.264367
+Successfully loaded 1500 app details | time: 2024-10-15 02:45:22.370644
+2024-10-15 02:45:28.705638 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:45:58.846244 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:46:28.989922 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:46:59.142123 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:47:29.347464 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:47:59.485149 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:48:29.626601 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:48:59.766548 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:49:29.904589 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:50:00.065794 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:50:30.205202 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:51:00.351456 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:51:00.351456 - Max Retries exceeded: Expecting value: line 1 column 1 (char 0) returning None:
+2024-10-15 02:51:00.460294 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:51:30.599142 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:52:00.746821 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:52:30.886509 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:53:01.036948 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:53:31.178232 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:54:01.376922 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:54:31.514034 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 02:55:01.654237 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 1600 app details | time: 2024-10-15 02:55:47.195685
+Successfully loaded 100 app details | time: 2024-10-15 03:25:41.163643
+Successfully loaded 200 app details | time: 2024-10-15 03:26:03.328673
+Successfully loaded 300 app details | time: 2024-10-15 03:26:22.131831
+Successfully loaded 400 app details | time: 2024-10-15 03:26:40.659221
+Successfully loaded 500 app details | time: 2024-10-15 03:26:59.642365
+Successfully loaded 600 app details | time: 2024-10-15 03:27:18.080737
+2024-10-15 03:27:28.779979 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:27:58.938538 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:28:30.582805 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:29:03.801839 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:29:38.667735 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:30:15.283826 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:31:00.613362 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:31:30.771657 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:32:02.407285 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:32:35.617748 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:33:10.508044 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:33:47.115267 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:34:25.544295 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:35:05.888608 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:35:48.237694 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:36:32.705798 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:37:19.420720 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 700 app details | time: 2024-10-15 03:38:11.622536
+Successfully loaded 800 app details | time: 2024-10-15 03:38:34.083629
+Successfully loaded 900 app details | time: 2024-10-15 03:38:55.963387
+Successfully loaded 1000 app details | time: 2024-10-15 03:39:14.661931
+2024-10-15 03:39:28.748662 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:39:58.886002 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:40:30.519414 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:41:03.746134 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:41:38.608570 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:42:15.207307 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:42:53.632926 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:43:33.965859 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:44:16.317156 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:45:00.776164 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:45:47.485525 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:46:36.485083 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:46:36.486073 - Max Retries exceeded: Expecting value: line 1 column 1 (char 0) returning None:
+2024-10-15 03:46:36.593218 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:47:06.746362 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:47:38.379400 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:48:11.607777 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:48:46.472354 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:49:23.136289 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 1100 app details | time: 2024-10-15 03:50:07.019850
+Successfully loaded 1200 app details | time: 2024-10-15 03:50:29.099991
+Successfully loaded 1300 app details | time: 2024-10-15 03:50:51.183940
+Successfully loaded 1400 app details | time: 2024-10-15 03:51:09.804536
+Successfully loaded 1500 app details | time: 2024-10-15 03:51:28.555565
+2024-10-15 03:51:28.664240 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:51:58.819561 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:52:30.470619 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:53:03.712629 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:53:38.583813 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:54:15.183533 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:54:53.606408 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:55:39.668754 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:56:09.835294 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:56:41.465533 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:57:14.676434 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:57:49.540702 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:58:26.145316 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:59:04.596180 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 03:59:44.999541 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 04:00:27.349211 - Error: Expecting value: line 1 column 1 (char 0)
+2024-10-15 04:01:11.848091 - Error: Expecting value: line 1 column 1 (char 0)
+Successfully loaded 1600 app details | time: 2024-10-15 04:02:15.201050
+Successfully loaded 100 app details | time: 2024-10-15 10:49:34.159371
+Successfully loaded 200 app details | time: 2024-10-15 10:49:50.165841
+2024-10-15 10:49:50.719704 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:50:20.852604 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:50:52.475130 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:51:25.658235 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:52:00.608798 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:52:37.184453 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:53:15.627935 - Error: Failed to retrieve data for app ID 1194120
+2024-10-15 10:53:55.938507 - Error: Failed to retrieve data for app ID 1194120
+Successfully loaded 300 app details | time: 2024-10-15 10:54:52.989350
+Successfully loaded 400 app details | time: 2024-10-15 10:55:09.286937
+2024-10-15 10:55:09.904844 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:55:40.012404 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:56:11.644355 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:56:44.860010 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:57:19.700410 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:57:56.278029 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:58:34.744961 - Error: Failed to retrieve data for app ID 1523130
+2024-10-15 10:59:15.090591 - Error: Failed to retrieve data for app ID 1523130
+Successfully loaded 500 app details | time: 2024-10-15 11:00:12.236642
+Successfully loaded 600 app details | time: 2024-10-15 11:00:27.192441
+2024-10-15 11:00:28.321109 - Error: Failed to retrieve data for app ID 223850
+2024-10-15 11:00:58.578836 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:01:28.700573 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:02:00.461435 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:02:33.647423 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:03:08.510685 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:03:45.147961 - Error: Failed to retrieve data for app ID 224280
+2024-10-15 11:04:23.549662 - Error: Failed to retrieve data for app ID 224280
+Successfully loaded 700 app details | time: 2024-10-15 11:05:17.881377
+Successfully loaded 800 app details | time: 2024-10-15 11:05:33.480652
+2024-10-15 11:05:35.010782 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:06:05.150949 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:06:36.768787 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:07:09.959721 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:07:44.802938 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:08:21.412423 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:08:59.837719 - Error: Failed to retrieve data for app ID 377040
+2024-10-15 11:09:40.157955 - Error: Failed to retrieve data for app ID 377040
+Successfully loaded 900 app details | time: 2024-10-15 11:10:49.824390
+2024-10-15 11:11:05.721356 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:11:35.937935 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:12:07.712299 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:12:40.993190 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:13:16.057787 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:13:52.750572 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:14:31.299917 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:15:11.621256 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:15:53.979966 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:16:38.451225 - Error: Failed to retrieve data for app ID 499450
+2024-10-15 11:16:38.452217 - Max Retries exceeded: Failed to retrieve data for app ID 499450 returning None:
+Successfully loaded 1000 app details | time: 2024-10-15 11:16:45.958433
+Successfully loaded 1100 app details | time: 2024-10-15 11:17:01.020722
+2024-10-15 11:17:07.935487 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:17:38.074098 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:18:09.746180 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:18:43.002643 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:19:17.861108 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:19:54.459768 - Error: Failed to retrieve data for app ID 65300
+2024-10-15 11:20:32.870046 - Error: Failed to retrieve data for app ID 65300
+Successfully loaded 1200 app details | time: 2024-10-15 11:21:24.654659
+Successfully loaded 1300 app details | time: 2024-10-15 11:21:41.492305
+2024-10-15 11:21:48.433838 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:22:18.605447 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:22:50.240505 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:23:23.460205 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:23:58.352918 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:24:34.933049 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:25:13.352613 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:25:53.662317 - Error: Failed to retrieve data for app ID 795630
+2024-10-15 11:26:38.629912 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:27:08.759411 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:27:40.410361 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:28:13.620141 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:28:48.564259 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:29:25.171646 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:30:03.690120 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:30:44.126134 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:31:26.505633 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:32:10.947451 - Error: Failed to retrieve data for app ID 813350
+2024-10-15 11:32:10.948438 - Max Retries exceeded: Failed to retrieve data for app ID 813350 returning None:
+Successfully loaded 1400 app details | time: 2024-10-15 11:32:17.698419
+2024-10-15 11:32:32.159818 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:33:02.284171 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:33:34.005258 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:34:07.472414 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:34:42.374430 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:35:19.005159 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:35:57.437303 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:36:37.771288 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:37:20.092825 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:38:04.529345 - Error: Failed to retrieve data for app ID 895970
+2024-10-15 11:38:04.530346 - Max Retries exceeded: Failed to retrieve data for app ID 895970 returning None:
+Successfully loaded 1500 app details | time: 2024-10-15 11:38:07.165683
+Successfully loaded 1600 app details | time: 2024-10-15 11:38:22.179564
+2024-10-15 11:38:23.988238 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:38:54.122319 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:39:25.781810 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:39:58.991606 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:40:33.864167 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:41:10.467052 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:41:48.869966 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:42:29.183098 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:43:11.522945 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:43:55.963286 - Error: Failed to retrieve data for app ID 974470
+2024-10-15 11:43:55.964288 - Max Retries exceeded: Failed to retrieve data for app ID 974470 returning None:
