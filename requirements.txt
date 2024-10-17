@@ -4,4 +4,4 @@ numpy
 matplotlib
 seaborn
 IPython
-bokeh
+plotly
