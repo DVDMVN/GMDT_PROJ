@@ -5,4 +5,4 @@ matplotlib
 seaborn
 IPython
 plotly
-sklearn
+sklearn-learn
