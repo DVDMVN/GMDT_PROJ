@@ -470,22 +470,27 @@ st.header("Feature Engineering")
 
 st.write(
     """
-    - We first standardized game titles across all datasets to ensure accurate merging.
-    - We performed a left join using `name` as the key to merge the `top_1500_steam` and `metacritic` datasets, retaining all observations in `top_1500_steam`.
-    - We further joined the resulting dataframe with `all_55000_steam` using a similar left join strategy, incorporating all attributes relevant to our analysis.
+    Throughout every dataset, we very frequently utilized created features in our analysis. Having domain knowledge, we are able to postulate reasonable feature combinations for which further our
+    analysis and answer more powerful questions. The feature engineering portions take part within the exploration of each branch.
+
+    One common pattern of encoding we utilized was "binning and lumping", transforming continuous or discrete numerical features into categorical groupings.
+    - For example, binning prices of games into types such as "Free to Play" or "Under $10".
+
+    Binning and lumping helps us smooth the influence of outliers, we can place extreme outliers in outer bins, which reduces their impact on the rest of the data. Our datasets all deal with
+    extreme outliers, this is just one of several methods we utilized to smooth them.
     """
 )
 
 # CONCLUSIONS
-st.header("Conclusions")
+# st.header("Conclusions")
 
-st.write(
-    """
-    After merging and cleaning the datasets, the final dataframe used in the analysis contains:
-    - The `top_1500_steam` games dataset as the primary base.
-    - Additional review information from the `metacritic` dataset.
-    - Supplementary attributes from the `all_55000_steam` dataset.
+# st.write(
+#     """
+#     After merging and cleaning the datasets, the final dataframe used in the analysis contains:
+#     - The `top_1500_steam` games dataset as the primary base.
+#     - Additional review information from the `metacritic` dataset.
+#     - Supplementary attributes from the `all_55000_steam` dataset.
     
-    This comprehensive dataset allows for a holistic analysis of the factors influencing game success, with attributes ranging from user reviews and ratings to revenue and release information.
-    """
-)
+#     This comprehensive dataset allows for a holistic analysis of the factors influencing game success, with attributes ranging from user reviews and ratings to revenue and release information.
+#     """
+# )

@@ -12,10 +12,10 @@ welcome = st.Page("welcome.py", title="Welcome", icon="👋")
 about = st.Page("about.py", title="About the Data", icon="💾")
 top_1500_steam_analysis = st.Page("top_1500_steam_analysis.py", title="Top Steam Games Analysis", icon="🏆")
 all_55000_steam_analysis = st.Page("all_55000_steam_analysis.py", title="All Steam Games Analysis", icon="🌏")
-developer_hypothesis = st.Page("developer_hypothesis.py", title="Under Construction", icon="🚧")
 documentation = st.Page("documentation.py", title="Documentation", icon="📔")
+developer_hypothesis = st.Page("developer_hypothesis.py", title="Under Construction", icon="🚧")
 
-pg = st.navigation([welcome, about, top_1500_steam_analysis, all_55000_steam_analysis, developer_hypothesis, documentation])
+pg = st.navigation([welcome, about, top_1500_steam_analysis, all_55000_steam_analysis, documentation, developer_hypothesis])
 pg.run()
 
 # st.sidebar.success("Select a demo above.")

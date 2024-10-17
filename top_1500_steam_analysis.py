@@ -183,7 +183,7 @@ sales_tab, release_date_tab, review_and_playtime_tab = st.tabs(["Sales Trends", 
 # ------------------------------------
 
 with sales_tab:
-    st.markdown("### Navigation")
+    st.markdown("### Sales Trends")
 
     st.write(
         """
@@ -635,7 +635,7 @@ with sales_tab:
 plt.close()
 # ------------------------------------
 with release_date_tab:
-    st.markdown("### Navigation")
+    st.markdown("### Timeline Insights")
 
     st.write(
         """
@@ -774,7 +774,7 @@ with release_date_tab:
 plt.close()
 # ------------------------------------
 with review_and_playtime_tab:
-    st.markdown("### Navigation")
+    st.markdown("### Player Engagement Metrics")
 
     st.write(
         """
@@ -1029,6 +1029,8 @@ with review_and_playtime_tab:
 plt.close()
 # ------------------------------------
 
+st.markdown("Back to [Feature Explorations](#feature-explorations)")
+
 st.subheader("Key Insights", divider=True)
 
 with st.container():
@@ -1055,7 +1057,7 @@ with st.container():
         - For the first few games, developers of top games tend to make around the same in sales per game, and evidently those with the most experience, 5+ games made, have the largest
         amount of success.
         - There seems to be positive correlation between price ranges and revenue, however there is also a huge market in "Free to Play" games, with free games earning more on average than
-        games priced under $10 and between $10 and $50
+        games priced under 10 and between 10 and 50
 
         #### Regarding Time:
         - There is a lot of "noise" in the specific days of release. Some days see a lot of game releases while others see barely any at all.
