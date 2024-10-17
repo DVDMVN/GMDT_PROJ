@@ -1,7 +1,7 @@
 import streamlit as st
 
 st.title("Welcome to the Game Market Insights Dashboard")
-st.header("Discover Data-Driven Trends in Game Development")
+st.header("Discover Data-Driven Trends in Game Development", divider=True)
 
 st.subheader("About this Project")
 st.write("""
