@@ -1,8 +1,8 @@
 streamlit
+scikit-learn==1.5.1
 pandas
 numpy
 matplotlib
 seaborn
 IPython
 plotly
-scikit_learn==0.24.2
