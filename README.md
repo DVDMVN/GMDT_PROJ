@@ -1,0 +1,65 @@
+# Game Market Insights Dashboard
+<table>
+<tr>
+<td>
+  A webapp made with Streamlit to display analysis of several game market datasets. Our goal is to assist game developers in making data-informed decisions by showcasing key factors that influence game success.
+</td>
+</tr>
+</table>
+
+
+## Demo
+Check our live demo!
+
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gmdtproj.streamlit.app/)
+
+
+## File Explanation:
+
+**Exploration**:
+
+Initial IDA and EDA as well as cleaning and preprocessing was largely performed using Jupyter Notebooks.
+- cleaning.ipynb
+  - This notebook handles loading and cleaning of the raw datasets.
+- exploring[*].ipynb
+  - Notebooks which hold our experiments in exploratory data analysis for each dataset.
+
+**Data**:
+
+The 'data' folder is used to hold our preprocessed data. You may download and load the raw datasets according to cells in the 'cleaning.ipynb' file.
+- We also hold the 'unprocessed' versions, of the data. This data is at the in between stage of preprocessing and postprocessing, standardized but not cleaned. Used in the 'about.py' file for demonstrations in cleaning.
+
+**Streamlit Application**:
+
+This streamlit application is split into different files, representative of their page.
+- app.py
+  - The head file of our application. 
+- welcome.py
+  - The starting page, holding basic orientation information.
+- about.py
+  - Basic overviews of the dataset, and some demonstrations and explanations of the cleaning process.
+- top_1500_steam_analysis.py
+  - Analysis of key features within the 'top_1500_steam.csv' data file.
+- all_55000_steam_analysis.py
+  - Analysis of key features within the 'all_55000_steam.csv' data file.
+- metacritic_analysis.py
+  - Analysis of key features within the 'metacritic.csv' data file.
+- documentation.py
+  - An appendix.
+
+**Extra Files**:
+
+Some extra files were used to assist the main pages or exploration.
+- utils.py
+  - Storage for some common functions and other utilities. Holds our Steam API polling functions.
+- steam_api_logging.txt
+  - Tracks successes and errors from utilizing the Steam API.
+- floppy_disc.ipynb
+  - Utility notebook for quick problem troubleshooting.
+
+### Development
+
+Currently, this project is not open to contribution. This project was made for academics.
+
+## Team
+[![DVDMAN](https://avatars.githubusercontent.com/u/183556656?v=4&s=144)](https://github.com/DVDMVN)
