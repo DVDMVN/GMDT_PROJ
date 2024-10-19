@@ -4,13 +4,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+import plotly.graph_objects as go
+import plotly.colors as pc
 from sklearn.linear_model import LinearRegression
 
 from utils import load_all_55000_steam
 
 all_55000_steam = load_all_55000_steam()
 
-def perform_feature_engineering():
+def perform_feature_engineering(all_55000_steam) -> pd.DataFrame:
     # Categorizing Price
     bins = [-1, 0, 10, 50, float('inf')]  # -1 to include 0 in the first bin
     labels = ['Free to Play', 'Under $10', '$10-50', 'Over $50']
@@ -41,13 +43,26 @@ def perform_feature_engineering():
             "200,000,000 .. 500,000,000",  
         ]
     all_55000_steam['owners'] = pd.Categorical(all_55000_steam['owners'], categories=owners_order, ordered=True)
-perform_feature_engineering()
+
+    # Converting missed datetime format "MON DD, YYYY"
+    pattern_mon_day_year_comma = r'^[A-Za-z]{3} \d{1,2}, \d{4}$'  # Matches "Mon DD, YYYY" format
+    mask_mon_day_year_comma = all_55000_steam['release_date'].str.match(pattern_mon_day_year_comma, na=False)
+    all_55000_steam.loc[mask_mon_day_year_comma, 'release_date'] = pd.to_datetime(all_55000_steam.loc[mask_mon_day_year_comma, 'release_date'], format='%b %d, %Y')
+
+    # Creating a new feature 'release_year' by binning on release_date
+    all_55000_steam['release_date'] = pd.to_datetime(all_55000_steam['release_date'], format='%Y-%m-%d')
+    all_55000_steam['release_year'] = all_55000_steam['release_date'].dt.year
+    all_55000_steam['release_year'] = all_55000_steam['release_year'].astype("Int64")
+
+    # Creating a revenue estimation using initial_price, price, and review counts
+    return all_55000_steam
+all_55000_steam = perform_feature_engineering(all_55000_steam)
 
 st.header("🌏Exploring All Steam Games from 2022🌏")
 
 st.write(
     """
-    In this page, we will explore the massive 55000 steam games dataset, a dataset which represents a complete snapshot of the steam marketplace in 2022. The data was collected using the Steam public API
+    In this page, we will explore the massive 55000 Steam games dataset, a dataset which represents a complete snapshot of the Steam marketplace in 2022. The data was collected using the Steam public API
      as well as steamspy.com's private API.
     """
 )
@@ -63,22 +78,20 @@ st.markdown("""
     * A comprehensive list of our most important findings, along with some caveats to consider.
 """)
 
-# Insert dashboards:
 st.subheader("Features of Interest", divider=True)
 st.write(
     """
-    Before getting into the analysis, let's first explain our key features and how we intend to utilize them. We must also explain some various caveots regarding the 
+    Before getting into the analysis, we will first explain our key features and how we intend to utilize them. We must also explain some various caveots regarding the 
     integrity of some particular features.
 
     For this particular dataset, we get the main advantage of "mass". We have the public detailed analytics for the _entire_ steam games dataset, giving our analysis
     a little more integrity than with the top steam games dataset.
         
     - `positive_reviews` and `negative_reviews`:
-        - We have access to the number of positive and negative reviews for each game, which can be a valuable metric for analysis. These are metrics that are not normally public,
-        and not available through Steam's public API. It is good to have these, however because they are outsourced, we must trust in algorithms for steamspy to judge whether these 
-        figures are accurate or at least more accurate than trivial imputation methods. Using these features, we can reasonably impute a review score, and use that to analyze whether
-        there are correlations between user ratings and other features.
-        - We will also use these counts as a measure of success, in absence of revenue or an accurate copies sold figure.
+        - We have access to the number of positive and negative reviews for each game, typically this information is not public or available through Steam's API. Likely, steamspy's
+        API was used to crawl user information.
+        - These counts allow us to estimate a 'review_score' metric in two different ways. We can calculate a "percentage positive" metric taking the number of positive_reviews over the total. We could also use
+        a ratio metric, the ratio between positive and negative reviews. In the absence of a revenue feature, we will utilize review counts as a reasonable estimate of success.
     - `owners`:
         - Another metric that is not normally public through Steam's public API. This is a range value estimate for the number of owners a game has.
     - `genres`:
@@ -90,13 +103,13 @@ st.write(
 st.write(
     """
     ##### Some important caveats:
-    1. Our dataset is a snapshot from November of 2022, making it nearly 2 years old. The games marketplace evolves a lot over the years (as we will find), we should
+    1. Our dataset is a snapshot from November of 2022, making it nearly 2 years old. The games marketplace is known to evolve quickly (as we will find), we should
     consider the possibility that some of these analysis are _already_ outdated.
-    2. "owners" is an approximation using steamspy's API. This metric is known to be quite inaccurate, especially for smaller titles. For that reason, we will combine 
-    this with a trivial imputation by review count.
-    3. We do not have a revenue estimate for this dataset, making success a little harder to measure. For this reason, we will be utilizing two imputed metrics. A trivial
-    revenue estimate using price, initial_price, and the total review count. And a trivial success measurement, that being whether the game crosses a certain number of reviews
-    on steam.
+    2. "owners" is an approximation using steamspy's API. This metric is known to be quite inaccurate, especially for smaller titles. For this reason, we will prefer to
+    utilize review counts as a measure of success, rather than owners.
+    3. As mentioned, we do not have a revenue estimate for this dataset, making success a little harder to measure. We will utilize review counts as a trivial estimation for success.
+        - A common method for revenue estimation simply scales the review_count by a metric (around 40-50) and the price. We should keep in mind that this metric is not entirely accurate,
+        however reasonable it is.
     """
 )
 
@@ -124,19 +137,29 @@ with object_stats_tab:
     st.write(all_55000_steam[all_55000_steam.select_dtypes(include=['object', 'category']).columns].describe())
 
 
-def plot_correlation_heatmap() -> plt.Figure:
-    fig = plt.figure()
-    sns.heatmap(
-        data=all_55000_steam.select_dtypes(include='number').drop('app_id', axis=1).corr(),
-        annot=True,
-        cmap='coolwarm',
-        vmax=1,
-        vmin=-1,
-        square=True
+def plot_correlation_heatmap() -> go.Figure:
+    corr_matrix = all_55000_steam.select_dtypes(include='number').drop('app_id', axis=1).corr()
+    corr_matrix = np.round(corr_matrix, 2)
+
+    fig = px.imshow(
+        corr_matrix,
+        text_auto=True, 
+        color_continuous_scale='RdBu_r',
+        zmin=-1,
+        zmax=1,
+        aspect="auto"
     )
-    plt.title('Correlation heatmap of numeric features', y=1.01)
+    
+    fig.update_layout(
+        title='Correlation heatmap',
+        width=700,
+        height=700,
+        margin=dict(l=120, r=120, t=100, b=100)
+    )
+    
     return fig
-st.pyplot(plot_correlation_heatmap())
+
+st.plotly_chart(plot_correlation_heatmap())
 
 st.write(
     """
@@ -150,7 +173,9 @@ st.write(
     """
 )
 
-review_scores_tab, genres_tab = st.tabs(["Review Scores", "Genres"])
+st.write("### Branch Exploration")
+
+review_scores_tab, release_date_tab, genres_tab = st.tabs(["Review Scores", "Release Date", "Genres"])
 with review_scores_tab:
     st.write("### Review Scores Analysis")
 
@@ -372,6 +397,217 @@ with review_scores_tab:
         """
     )
 
+
+with release_date_tab:
+    st.write("### Review Scores Analysis")
+    st.write(
+        """
+        Within this branch, we want to investigate the following questions:
+        - What does the total distribution of reviews look like?
+        - Do our reviews have any bearing on our success? Do more reviews give us more success?
+        - Does having a good positive to negative review ratio correlate with success?
+        """
+    )
+
+    st.write(
+        """
+        We begin with plotting our distributions:
+        """
+    )
+
+    # By release year, lets see the trends in game review scores per year.
+    def plot_release_date_distribution() -> plt.Figure:
+        fig = plt.figure(figsize=(12, 6))
+        sns.countplot(
+            data=all_55000_steam,
+            y='release_year',
+            orient='h',
+        )
+        plt.title("Game release year frequency")
+        plt.xlabel("Count")
+        plt.ylabel("Release year")
+        return fig
+    st.pyplot(plot_release_date_distribution())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+
+    def plot_release_year_to_total_reviews() -> plt.Figure:
+        fig = plt.figure(figsize=(12, 6))
+        reviews_by_year = all_55000_steam.groupby("release_year")['total_review_count'].sum()
+        reviews_by_year
+        sns.barplot(
+            x=reviews_by_year.values,
+            y=reviews_by_year.index,
+            orient='h',
+        )
+        plt.xlabel('Average total review count')
+        plt.ylabel('Release year')
+        plt.title('Total review counts on Steam by year')
+        return fig
+    st.pyplot(plot_release_year_to_total_reviews())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+
+    # How does the release year affect our review score?
+    def plot_release_year_to_average_total_review_count_per_game() -> plt.Figure:
+        fig = plt.figure(figsize=(12, 6))
+        reviews_by_year = all_55000_steam.groupby("release_year")['total_review_count'].mean()
+        reviews_by_year
+        sns.barplot(
+            x=reviews_by_year.values,
+            y=reviews_by_year.index,
+            orient='h',
+        )
+        plt.xlabel('Average total review count')
+        plt.ylabel('Release year')
+        plt.title('Average review counts per game by release year')
+        return fig
+    st.pyplot(plot_release_year_to_average_total_review_count_per_game())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+    
+    def plot_top_10_sum_and_proportion() -> plt.Figure:
+        sorted_review_count_per_year = all_55000_steam.sort_values(by='total_review_count', ascending=False)
+        total_review_count_per_year = sorted_review_count_per_year.groupby("release_year")[['name', 'total_review_count']].agg({
+            'name': 'count',
+            'total_review_count': 'sum',
+        }).rename(
+            columns={'name': 'count'}
+        ).reset_index()
+
+        total_review_count_per_year = total_review_count_per_year[total_review_count_per_year['count'] > 1000]
+
+        total_review_count_per_year_top_10 = (
+            sorted_review_count_per_year.groupby("release_year")
+            .head(10)
+            .groupby("release_year")
+            .agg({
+                'total_review_count': 'sum'
+            }).rename(
+                columns={'total_review_count': 'total_review_count_top_10'}
+            )
+            .reset_index()
+        )
+
+        merged_total_and_slicesum_review_count_per_year = pd.merge(total_review_count_per_year, total_review_count_per_year_top_10, on='release_year', how='left')
+        merged_total_and_slicesum_review_count_per_year[
+            "proportion_of_reviews_of_top_10_to_total"
+        ] = (
+            merged_total_and_slicesum_review_count_per_year["total_review_count_top_10"]
+            / merged_total_and_slicesum_review_count_per_year["total_review_count"]
+        )
+        # print(merged_total_and_slicesum_review_count_per_year)
+        fig = plt.figure(figsize=(12, 6))
+        ax = sns.barplot(
+            data=merged_total_and_slicesum_review_count_per_year,
+            x='release_year',
+            y='total_review_count_top_10',
+            dodge=False,
+        )
+        values = merged_total_and_slicesum_review_count_per_year['proportion_of_reviews_of_top_10_to_total']
+        values = np.array([f'{v * 100:.2f}%' for v in values])
+        ax.bar_label(container=ax.containers[0], labels=values)
+        ax.text(x=0.5, y=1.05, s="With percentage to the year's total review count", fontsize=10, alpha=0.75, ha='center', va='bottom', transform=ax.transAxes)
+        plt.title("Total review counts for the top 10 games by year", y=1.1)
+        plt.xlabel("Release year")
+        plt.ylabel("Total reviews of top 10")
+        return fig
+    
+    st.pyplot(plot_top_10_sum_and_proportion())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+
+# How does release date correlate at all with genre?
+    def plot_bubble_proportions_of_genre_by_year() -> plt.Figure:
+        all_55000_steam_copy = all_55000_steam.copy(deep=True)
+        all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
+        all_55000_steam_exploded_genres = all_55000_steam_copy.explode('genres')
+        genre_counts = all_55000_steam_exploded_genres.groupby(['release_year', 'genres']).size().reset_index(name='count')
+        total_genres_per_year = all_55000_steam_exploded_genres.groupby('release_year').size().reset_index(name='total_genres')
+        genre_proportions = pd.merge(genre_counts, total_genres_per_year, on='release_year')
+
+        genre_proportions_filtered = genre_proportions[(genre_proportions['total_genres'] > 1000) & 
+                                                    (genre_proportions['count'] >= 60)]
+        genre_proportions_filtered['genre_proportion'] = genre_proportions_filtered['count'] / genre_proportions_filtered['total_genres']
+
+
+        fig = plt.figure(figsize=(12, 8))
+        plt.scatter(
+            x = genre_proportions_filtered["release_year"],
+            y = genre_proportions_filtered["genres"],
+            s=genre_proportions_filtered["genre_proportion"] * 5000,  # Scaling the bubble size by proportion * number for clarity
+            alpha=0.6,
+            edgecolors="w",
+            linewidth=2,
+        )
+
+        plt.xlabel('Release year')
+        plt.ylabel('Genre')
+        plt.title('Proportion of genres by year')
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        return fig
+    st.pyplot(plot_bubble_proportions_of_genre_by_year())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+
+    def plot_genres_of_interest_trends() -> plt.Figure:
+        all_55000_steam_copy = all_55000_steam.copy(deep=True)
+        all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
+        all_55000_steam_exploded_genres = all_55000_steam_copy.explode('genres')
+        genre_counts = all_55000_steam_exploded_genres.groupby(['release_year', 'genres']).size().reset_index(name='count')
+        total_genres_per_year = all_55000_steam_exploded_genres.groupby('release_year').size().reset_index(name='total_genres')
+        genre_proportions = pd.merge(genre_counts, total_genres_per_year, on='release_year')
+
+        genre_proportions_filtered = genre_proportions[(genre_proportions['total_genres'] > 1000) & 
+                                                    (genre_proportions['count'] >= 60)]
+
+        genres_of_interest = ["Free to Play", "Indie", "Strategy"]
+        genre_trends = genre_proportions_filtered[genre_proportions_filtered['genres'].isin(genres_of_interest)]
+
+        fig = plt.figure(figsize=(10, 6))
+
+        for genre in genres_of_interest:
+            genre_data = genre_trends[genre_trends['genres'] == genre]
+            plt.plot(genre_data['release_year'], genre_data['count'], label=genre, marker='o')
+
+        plt.xlabel('Release year')
+        plt.ylabel('Count')
+        plt.title('Popularity of Free to Play, Indie, and Strategy games over years')
+        plt.xticks(rotation=45)
+        plt.legend(title="Genres")
+        plt.grid(True)
+        return fig
+    st.pyplot(plot_genres_of_interest_trends())
+
+    st.write(
+        """
+        TODO: COMMENT
+        """
+    )
+
+
+
 with genres_tab:
     st.write("### Genres Analysis")
 
@@ -538,7 +774,7 @@ with genres_tab:
         """
     )
 
-st.markdown("Back to [Feature Explorations](#feature-explorations)")
+st.markdown("[Explore other branches](#branch-exploration)")
 
 st.subheader("Key Insights", divider=True)
 

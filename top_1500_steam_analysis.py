@@ -7,6 +7,8 @@ from utils import load_top_1500_steam
 
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly.colors as pc
+from plotly.subplots import make_subplots
 from sklearn.linear_model import LinearRegression
 
 import calendar
@@ -54,7 +56,7 @@ st.markdown("""
 st.subheader("Features of Interest", divider=True)
 st.write(
     """
-    Before getting into the analysis, let's first explain our key features and how we intend to utilize them. We must also explain some various caveots regarding the 
+    Before getting into the analysis, let's first explain our key features and how we intend to utilize them. We must also explain some various caveats regarding the 
     integrity of some particular features.
 
     For this particular dataset, we get a lot of great features to analyze that are in particular hard to source. The gamalytic API provides us with many useful data metrics that
@@ -88,18 +90,6 @@ st.write("See our documentation page for further details on this dataset's featu
 
 st.page_link("./documentation.py", label="Documentation", icon="📔")
 
-# st.write(
-#     """
-#     Using these particular features, we can try to analyze these questions:
-#     - Using review_score, we can ask: does the average review score influence revenue?
-#     - Using price, we can observe the distribution of price across the top games.
-#     - Using developer, we can observe the distribution of developers across the top games.
-#     - Using release_date, we can ask: how does the release_date affect revenue? Do more recent games have higher revenue?
-#     - Using publisher_class, we can ask: how does the publisher class distribution look for the top games? Do publisher classes correlate at all with revenue (e.g.
-#         do indie games earn less than large publishers?)
-#     """
-# )
-
 st.subheader("Feature Explorations", divider=True)
 
 
@@ -125,6 +115,7 @@ st.write(
         Chart of publisher class distribution
     """
 )
+
 def plot_publisher_class_distribution() -> go.Figure:
     data = top_1500_steam['publisher_class'].value_counts().reset_index(name='count')
 
@@ -148,13 +139,27 @@ def plot_publisher_class_distribution() -> go.Figure:
     )
     return fig
 
-def plot_correlation_heatmap() -> plt.Figure:
-    plt.figure()
-    sns.heatmap(
-        top_1500_steam[top_1500_steam.select_dtypes(include="number").columns].corr(),
-        annot=True,
+def plot_correlation_heatmap() -> go.Figure:
+    corr_matrix = top_1500_steam.select_dtypes(include='number').drop('steam_id', axis=1).corr()
+    corr_matrix = np.round(corr_matrix, 2)
+
+    fig = px.imshow(
+        corr_matrix,
+        text_auto=True, 
+        color_continuous_scale='RdBu_r',
+        zmin=-1,
+        zmax=1,
+        aspect="auto"
     )
-    return plt.gcf()
+    
+    fig.update_layout(
+        title='Correlation heatmap',
+        width=700,
+        height=700,
+        margin=dict(l=120, r=120, t=100, b=100)
+    )
+    
+    return fig
 
 pie_chart_tab, corr_heatmap_tab = st.tabs(['Publisher Class Distribution', 'Numerical Feature Correlations'])
 
@@ -167,7 +172,7 @@ with pie_chart_tab:
     )
 
 with corr_heatmap_tab:
-    st.pyplot(plot_correlation_heatmap())
+    st.plotly_chart(plot_correlation_heatmap())
     st.write(
         """
             This heatmap shows the correlation between different numerical features. You might observe, besides the trivial revenue and copies_sold correlation,
@@ -178,24 +183,26 @@ with corr_heatmap_tab:
 # ------------------------------------
 
 
+st.write("### Branch Exploration")
+
 sales_tab, release_date_tab, review_and_playtime_tab = st.tabs(["Sales Trends", "Timeline Insights", "Player Engagement Metrics"])
 
 # ------------------------------------
 
 with sales_tab:
-    st.markdown("### Sales Trends")
+    st.markdown("##### Sales Trends")
 
     st.write(
         """
             Within this branch, we want to investigate the following questions:
             - Is the market dominated by a few players, or is the market spread across many?
             - Does having a specific publisher for a game have an advantage in the market?
-            - Does experience matter in terms of success? How does a seasoned developer fair against a new developer?
+            - Does experience matter in terms of success? How does a seasoned developer fare against a new developer?
             - How much does price setting influence the sales success of games?
         """
     )
 
-
+    @st.cache_data
     def plot_sales_distributions() -> plt.Figure:
         fig, axes = plt.subplots(1, 3, figsize=(20, 6))
         axes: list[plt.Axes] = axes.ravel()
@@ -243,8 +250,8 @@ with sales_tab:
         """
     )
 
+    @st.cache_data
     def plot_top_n_copies_sold_and_revenue(copies_sold_n: int = 10, revenue_n: int = 10) -> plt.Figure:
-        # Comparing copies sold within our top 10 sorted by copies sold
         fig, axes = plt.subplots(2, 1, figsize=((20, 12)))
         axes: list[plt.Axes]  = axes.ravel()
 
@@ -259,11 +266,6 @@ with sales_tab:
         axes[0].set_xlabel("Title")
         axes[0].set_ylabel("Copies Sold (10 Million)")
 
-        # Checking the proportion of copies sold from the top 10 to total copies sold of all games within our dataset:
-        percentage_of_total_copies_sold_within_top_n = (sorted_by_copies_sold.head(copies_sold_n)['copies_sold'].sum() / top_1500_steam['copies_sold'].sum()) * 100
-        print(f'Percentage of copies sold by top {copies_sold_n} to total copies sold within dataset: {percentage_of_total_copies_sold_within_top_n:.2f}%')
-
-        # Comparing copies sold within our top 10 sorted by copies sold
         sorted_by_revenue = top_1500_steam.sort_values(by="revenue", ascending=False)
 
         sns.barplot(
@@ -275,9 +277,6 @@ with sales_tab:
         axes[1].set_xlabel("Title")
         axes[1].set_ylabel("Revenue (100 million)")
 
-        # Checking the proportion of copies sold from the top 10 to total copies sold of all games within our dataset:
-        percentage_of_total_revenue_within_top_n = (sorted_by_revenue.head(revenue_n)['revenue'].sum() / top_1500_steam['revenue'].sum()) * 100
-        print(f'Percentage of revenue by top {revenue_n} to total revenue within dataset: {percentage_of_total_revenue_within_top_n:.2f}%')
         return fig
     st.pyplot(plot_top_n_copies_sold_and_revenue())
 
@@ -290,9 +289,8 @@ with sales_tab:
         """
     )
 
+    @st.cache_data
     def plot_range_copies_sold_and_revenue(copies_sold_range: tuple[int, int] = (100, 1000), revenue_range: tuple[int, int] = (100, 1000)) -> plt.Figure:
-        # Comparing copies sold within our top 10 sorted by copies sold
-
         sorted_by_copies_sold = top_1500_steam.sort_values(by='copies_sold', ascending=False)
         sorted_by_revenue = top_1500_steam.sort_values(by="revenue", ascending=False)
 
@@ -322,19 +320,6 @@ with sales_tab:
         axes[1].set_xticks([])
         axes[1].set_xlabel("Rank")
         axes[1].set_ylabel("Revenue")
-
-        # TODO: Also print out summary stats for the range
-
-        # Checking the proportion of copies sold from the top 10 to total copies sold of all games within our dataset:
-        # percentage_of_total_copies_sold_within_top_n = (sorted_by_copies_sold.head(copies_sold_n)['copies_sold'].sum() / top_1500_steam['copies_sold'].sum()) * 100
-        # print(f'Percentage of copies sold by top {copies_sold_n} to total copies sold within dataset: {percentage_of_total_copies_sold_within_top_n:.2f}%')
-
-        # # Comparing copies sold within our top 10 sorted by copies sold
-
-        # # Checking the proportion of copies sold from the top 10 to total copies sold of all games within our dataset:
-        # percentage_of_total_revenue_within_top_n = (sorted_by_revenue.head(revenue_n)['revenue'].sum() / top_1500_steam['revenue'].sum()) * 100
-        # print(f'Percentage of revenue by top {revenue_n} to total revenue within dataset: {percentage_of_total_revenue_within_top_n:.2f}%')
-        
         return fig
     st.pyplot(plot_range_copies_sold_and_revenue())
 
@@ -352,6 +337,7 @@ with sales_tab:
         """
     )
 
+    @st.cache_data
     def plot_avg_copies_sold_and_revenue() -> plt.Figure:
         avg_copies_sold_by_publisher = top_1500_steam.groupby('publisher_class')['copies_sold'].mean().reset_index()
             
@@ -397,7 +383,7 @@ with sales_tab:
         """
     )
 
-    # Encoding a new column called "experience"
+    @st.cache_data
     def plot_experience_to_revenue():
         bins = [0, 1, 2, 3, 5, float('inf')]  # Define the bin edges
         labels = ['No Prior Experience', '1', '2', '3 - 4', '5+']  # Define the labels for each bin
@@ -468,7 +454,7 @@ with sales_tab:
     st.write(
         """
         The plot on the left showcases average revenues of developers by their developer experience. The plot on the right showcases average revenues by publisher experience.
-        - Both a developer and a publisher may theorhetically get better with more experience, so it may be interesting to look at trends for both.
+        - Both a developer and a publisher may theoretically get better with more experience, so it may be interesting to look at trends for both.
         - The plots also have an "errorbar", which indicates the inner quartile range for our revenues in each group. This helps us get an idea about the spread of our data.
 
         From our plot on developer experience to revenue, we can see an interesting trend. The first few games a developer creates seem to be their initially best ones, followed by a steep decline
@@ -490,7 +476,7 @@ with sales_tab:
         part of the _top_ top. This can be said for many of the AAA companies on this list.
         """
     )
-
+    @st.cache_data
     def plot_copies_sold_and_revenue_regression():
         # Linear regression model
         X = top_1500_steam[['copies_sold']]
@@ -522,6 +508,7 @@ with sales_tab:
         """
     )
 
+    @st.cache_data
     def plot_price_distribution() -> plt.Figure:
         plt.figure()
         sns.histplot(
@@ -542,6 +529,7 @@ with sales_tab:
         """
     )
 
+    @st.cache_data
     def plot_price_category_distribution() -> plt.Figure:
         fig, axes = plt.subplots(1, 2, figsize=(15, 6))
         sns.histplot(
@@ -1029,7 +1017,7 @@ with review_and_playtime_tab:
 plt.close()
 # ------------------------------------
 
-st.markdown("Back to [Feature Explorations](#feature-explorations)")
+st.markdown("[Explore other branches](#branch-exploration)")
 
 st.subheader("Key Insights", divider=True)
 
@@ -1045,6 +1033,368 @@ with st.container():
         """,
         unsafe_allow_html=True
     )
+    with st.container(border=True):
+
+        st.write(
+            """
+            **🌟Market concentration🌟**
+            """
+        )
+
+        @st.cache_data()
+        def dashboard_plot_cumulative_revenue() -> go.Figure:
+            sorted_by_revenue = top_1500_steam.sort_values(by="revenue", ascending=False)
+            cumulative_revenues = sorted_by_revenue['revenue'].cumsum()
+            total_revenue = top_1500_steam['revenue'].sum()
+
+            cumulative_revenues = pd.DataFrame(
+                {
+                    "rank": cumulative_revenues.index,
+                    "cumulative_revenue": cumulative_revenues.values,
+                    "proportion_to_total_revenue": cumulative_revenues.values / total_revenue,
+                }
+            )
+
+            fig = go.Figure()
+            
+            fig.add_trace(go.Scatter(
+                x=cumulative_revenues.index,
+                y=cumulative_revenues['cumulative_revenue'],
+                mode='lines',
+                name='Cumulative revenue',
+                hovertemplate=(
+                    'Rank: %{x}<br>' +
+                    'Cumulative revenue: %{y}<br>' +
+                    'Proportion to total revenue: %{text:.4f}<br>' +
+                    '<extra></extra>'
+                ),
+                text=cumulative_revenues['proportion_to_total_revenue']
+            ))
+
+            # Bringing attention to some key figures
+            fig.add_annotation(
+                x=10,
+                y=cumulative_revenues.loc[9, 'cumulative_revenue'],
+                text=f'Top 10 revenues accounts<br>for {cumulative_revenues.loc[9, 'proportion_to_total_revenue'] * 100:.2f}% of total',
+                showarrow=True,
+                arrowhead=2,
+                ax = 130,
+                ay = 30,
+            )
+
+            fig.add_annotation(
+                x=100,
+                y=cumulative_revenues.loc[99, 'cumulative_revenue'],
+                text=f'Top 100 revenues accounts<br>for {cumulative_revenues.loc[99, 'proportion_to_total_revenue'] * 100:.2f}% of total',
+                showarrow=True,
+                arrowhead=2,
+                ax = 80,
+                ay = 40,
+            )
+            
+            fig.update_layout(
+                title="Cumulative revenues",
+                xaxis_title="Rank",
+                yaxis_title="Total revenue",
+                width=1000,
+                height=500
+            )
+            
+            return fig
+        st.plotly_chart(dashboard_plot_cumulative_revenue())
+
+        st.write(
+            """
+            The top 10 games make up the majority of the revenue of all games.
+
+            We can get a better picture looking at a cumulative revenue graph. With this, we can visualize the good news too. Though the top 100 games account for a significant portion of the total revenue, 
+            we have a long tail downward with lots of games still capturing sizeable amounts of revenue.
+            """
+        )
+
+
+    with st.container(border=True):
+
+        st.write(
+            """
+            **🌟Publisher advantage🌟**
+            """
+        )
+
+        def dashboard_plot_publisher_class_revenues(use_median: bool = False, show_fliers: bool = True) -> go.Figure:
+            fig = make_subplots(
+                rows=1,
+                cols=2,
+                subplot_titles=(
+                    "Boxplots for revenue by publisher class",
+                    "Average revenue by publisher class"
+                    if not use_median
+                    else "Median revenue by publisher class",
+                ),
+            )
+            
+            publisher_classes = top_1500_steam['publisher_class'].unique()
+
+            for publisher_class in publisher_classes:
+                revenue_data = top_1500_steam[top_1500_steam['publisher_class'] == publisher_class]['revenue']
+                
+                q1 = revenue_data.quantile(0.25)
+                q3 = revenue_data.quantile(0.75)
+                iqr = q3 - q1
+                lower_bound = q1 - 1.5 * iqr
+                upper_bound = q3 + 1.5 * iqr
+
+                if not show_fliers:
+                    revenue_data = revenue_data[(revenue_data >= lower_bound) & (revenue_data <= upper_bound)]
+                
+                fig.add_trace(
+                    go.Box(
+                        y=revenue_data,
+                        name=publisher_class,
+                        boxmean=True,
+                        boxpoints="all" if show_fliers else False
+                    ),
+                    row=1, col=1
+                )
+            
+            if use_median:
+                avg_revenue_by_publisher = top_1500_steam.groupby('publisher_class')['revenue'].median().reset_index()
+            else:
+                avg_revenue_by_publisher = top_1500_steam.groupby('publisher_class')['revenue'].mean().reset_index()
+
+            fig.add_trace(
+                go.Bar(
+                    x=avg_revenue_by_publisher["publisher_class"],
+                    y=avg_revenue_by_publisher["revenue"],
+                    name="Average revenue" if not use_median else "Median revenue"
+                ),
+                row=1, col=2
+            )
+
+            fig.update_layout(
+                title="Publisher class revenue analysis",
+                width=1000,
+                height=500,
+            )
+
+            fig.update_xaxes(title_text="Publisher class", row=1, col=1)
+            fig.update_yaxes(title_text="Revenue", row=1, col=1)
+
+            fig.update_xaxes(title_text="Publisher class", row=1, col=2)
+            fig.update_yaxes(title_text="Average revenue" if not use_median else "Median revenue", row=1, col=2)
+
+            return fig
+        
+        dashboard_use_median_for_publisher_class_revenues = st.toggle("Use median revenue instead of mean")
+        st.plotly_chart(
+            dashboard_plot_publisher_class_revenues(
+                use_median=dashboard_use_median_for_publisher_class_revenues,
+                show_fliers=False,
+            )
+        )
+        st.write(
+            """
+            Publishing with a large company yields better average results
+
+            We can see that the top publisher class, which is the most common publisher class, has the highest average revenue. However, we can also see that the publisher class with the highest median revenue is the same as the top publisher class.
+            """
+        )
+
+    with st.container(border=True):
+
+        st.write(
+            """
+            **🌟Free Games Gain, Mid Range Games Reign🌟**
+            """
+        )
+
+        @st.cache_data()
+        def dashboard_plot_price_and_revenue() -> go.Figure:
+            start, stop = (100, 1000)
+
+            sorted_by_revenue = top_1500_steam.sort_values(by='revenue', ascending=False)
+
+            selection = sorted_by_revenue.iloc[start:]
+
+            avg_revenue_by_price = selection.groupby('price_category', observed=False)['revenue'].mean().reset_index()
+            total_revenue_by_price = selection.groupby('price_category', observed=False)['revenue'].sum().reset_index()
+
+            colors = pc.qualitative.Plotly
+
+            fig = make_subplots(rows=1, cols=2, subplot_titles=("Average revenue by price category", "Total revenue by price category"))
+
+            fig.add_trace(
+                go.Bar(
+                    x=avg_revenue_by_price['price_category'],
+                    y=avg_revenue_by_price['revenue'],
+                    name='Average Revenue',
+                    marker=dict(color=colors),
+                    showlegend=False
+                ),
+                row=1, col=1
+            )
+
+            fig.add_trace(
+                go.Bar(
+                    x=total_revenue_by_price['price_category'],
+                    y=total_revenue_by_price['revenue'],
+                    name='Total Revenue',
+                    marker=dict(color=colors),
+                    showlegend=False
+                ),
+                row=1, col=2
+            )
+
+            fig.update_layout(
+                title="Revenue by price category",
+                width=1000,
+                height=500,
+            )
+
+            fig.update_xaxes(title_text="Price category", row=1, col=1)
+            fig.update_yaxes(title_text="Average revenue", row=1, col=1)
+
+            fig.update_xaxes(title_text="Price category", row=1, col=2)
+            fig.update_yaxes(title_text="Total revenue", row=1, col=2)
+
+            return fig
+        st.plotly_chart(dashboard_plot_price_and_revenue())
+        
+        st.write(
+            """
+            We can see that the games with the highest average revenue are the most expensive, while the games with the highest total revenue are the cheapest.
+            """
+        )
+
+    with st.container(border=True):
+
+        st.write(
+            """
+            **🌟Release Day🌟**
+            """
+        )
+
+        @st.cache_data()
+        def plot_monthly_revenue_distribution() -> go.Figure:
+            monthly_stats = top_1500_steam.groupby('release_month', observed=False)['revenue'].agg(['median', 'mean']).reset_index()
+
+            fig = go.Figure()
+            fig.add_trace(
+                go.Scatter(
+                    x=monthly_stats['release_month'],
+                    y=monthly_stats['median'],
+                    mode='lines+markers',
+                    name='Median revenue',
+                )
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=monthly_stats['release_month'],
+                    y=monthly_stats['mean'],
+                    mode='lines+markers',
+                    name='Mean revenue',
+                )
+            )
+            fig.update_layout(
+                title="Average and median revenue by release month",
+                xaxis_title="Release month",
+                yaxis_title="Revenue (1 million)",
+                width=1000,
+                height=500
+            )
+            
+            return fig
+        st.plotly_chart(plot_monthly_revenue_distribution())
+
+        st.write(
+            """
+
+            We can see that the average and median revenue by release month are similar, with the median revenue being slightly higher in some months.
+            """
+        )
+
+    with st.container(border=True):
+
+        st.write(
+            """
+            **🌟Poorly Rated but Highly Profitable🌟**
+            """
+        )
+
+        def dashboard_plot_review_score_double_regression(regression_split_metric: int = 15) -> go.Figure:
+            sorted_by_revenue = top_1500_steam.sort_values(by="revenue", ascending=False)
+            selection_revenue = sorted_by_revenue.iloc[100:].reset_index()
+
+            abs_difference = abs(selection_revenue['review_score'] - regression_split_metric)
+            closest_index = abs_difference.idxmin()
+            closest_review_score = selection_revenue.iloc[closest_index]['review_score']
+
+            negative_review_scores = selection_revenue[selection_revenue['review_score'] <= closest_review_score]
+            positive_review_scores = selection_revenue[selection_revenue['review_score'] >= closest_review_score]
+
+            negative_review_score_regression = LinearRegression()
+            positive_review_score_regression = LinearRegression()
+
+            x_negatives = negative_review_scores['review_score'].values.reshape(-1, 1)
+            y_negatives = negative_review_scores['revenue'].values
+
+            x_positives = positive_review_scores['review_score'].values.reshape(-1, 1)
+            y_positives = positive_review_scores['revenue'].values
+
+            negative_review_score_regression.fit(x_negatives, y_negatives)
+            positive_review_score_regression.fit(x_positives, y_positives)
+
+            y_predicted_negatives = negative_review_score_regression.predict(x_negatives)
+            y_predicted_positives = positive_review_score_regression.predict(x_positives)
+
+            fig = go.Figure()
+            fig.add_trace(
+                go.Scatter(
+                    x=selection_revenue["review_score"],
+                    y=selection_revenue["revenue"],
+                    mode="markers",
+                    name="True Data",
+                    marker=dict(opacity=0.5),
+                )
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=negative_review_scores["review_score"],
+                    y=y_predicted_negatives,
+                    mode="lines",
+                    name=f"0 - {regression_split_metric} score regression",
+                )
+            )
+
+            fig.add_trace(
+                go.Scatter(
+                    x=positive_review_scores["review_score"],
+                    y=y_predicted_positives,
+                    mode="lines",
+                    name=f"{regression_split_metric} - 100 score regression",
+                )
+            )
+
+            fig.update_layout(
+                title="Review score vs revenue with double regression line",
+                xaxis_title="Review score",
+                yaxis_title="Revenue",
+                width=800,
+                height=600,
+                legend=dict(x=.8, y=1, bgcolor='rgba(255,255,255,0.3)')
+            )
+
+            return fig    
+        dashboard_review_score_slider = st.slider("Review score to split regression on", 10, 90)
+        st.plotly_chart(dashboard_plot_review_score_double_regression(dashboard_review_score_slider))
+
+        st.write(
+            """
+            We can see that the review score has a significant impact on the revenue, with games with higher review scores typically earning higher revenues.
+            """
+        )
     # Your container content here
     st.write(
         """
