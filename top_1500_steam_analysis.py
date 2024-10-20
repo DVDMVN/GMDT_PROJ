@@ -1106,9 +1106,9 @@ with st.container():
         st.write(
             """
             The top 10 games make up the majority of the revenue of all games.
-
-            We can get a better picture looking at a cumulative revenue graph. With this, we can visualize the good news too. Though the top 100 games account for a significant portion of the total revenue, 
-            we have a long tail downward with lots of games still capturing sizeable amounts of revenue.
+            - This could be due to some few standout game releases of this year, such as "Pal World" and "Black Myth: Wukong".
+            - Looking at the rest of the distribution, however, we notice that beyond the first 100, we have a long tail of
+            games with similar success, which suggests that smaller games may still have a chance despite the dominating market.
             """
         )
 
@@ -1195,8 +1195,10 @@ with st.container():
         st.write(
             """
             Publishing with a large company yields better average results
-
-            We can see that the top publisher class, which is the most common publisher class, has the highest average revenue. However, we can also see that the publisher class with the highest median revenue is the same as the top publisher class.
+            - Larger publishers have access to larger budgets, which can give games better marketing and support for distribution. 
+            This discrepancy could be explained by these kinds of factors.
+            - In addition, publishers, like "EA" or "Nintendo" have a certain brand presence, people come to expect quality
+            from established names in the industry which may attract more players and generate sales.
             """
         )
 
@@ -1262,7 +1264,10 @@ with st.container():
         
         st.write(
             """
-            We can see that the games with the highest average revenue are the most expensive, while the games with the highest total revenue are the cheapest.
+            We have a mid-price domination in the total revenue of the marketplace, but higher priced and even free to play games typically earn more money on average than that price range.
+            - Expensive games are also mostly sold by the larger publishers. This discrepancy could be explained by this fact; premium rates are associated with the higher production of a
+            larger company, thus more attraction is had.
+            - Free to play success suggests that there are other avenues of generating revenue that may even outperform the standard models.
             """
         )
 
@@ -1309,8 +1314,8 @@ with st.container():
 
         st.write(
             """
-
-            We can see that the average and median revenue by release month are similar, with the median revenue being slightly higher in some months.
+            There seems to be no clear advantage for releasing a game in a certain month / season.
+            - 🌟This could suggest that the demand for games is mostly steady throughout the year🌟.
             """
         )
 
@@ -1392,46 +1397,49 @@ with st.container():
 
         st.write(
             """
-            We can see that the review score has a significant impact on the revenue, with games with higher review scores typically earning higher revenues.
+            Success does not seem related with game ratings, at least within our top games.
+            - This suggests that commercial success may be influenced more by many external factors, such as publisher, brand, hype, or other metrics.
+            - This also could indicate that if a game is sufficiently negative, it attracts its own type of crowd. Negative review scores may actually
+            be appeal for some players in the market.
             """
         )
-    # Your container content here
-    st.write(
-        """
-        From our qualitative analysis, we gathered these key insights:
         
-        #### Regarding sales dynamics:
-        - It is clear that the top games are themselves dominated by other top games. There are some key players in the market, that are hogs of sales metrics at the top.
-            - Outside of this, however, there is still a sizable market, within our top 1500 most of our games are earning hundreds of thousands of dollars in revenue.
-        - Though the games market is filled with a majority of indie games, AAA and AA publishing tends to correlate with higher revenue and sales than indie publishing
-        - For the first few games, developers of top games tend to make around the same in sales per game, and evidently those with the most experience, 5+ games made, have the largest
-        amount of success.
-        - There seems to be positive correlation between price ranges and revenue, however there is also a huge market in "Free to Play" games, with free games earning more on average than
-        games priced under 10 and between 10 and 50
+    # st.write(
+    #     """
+    #     From our qualitative analysis, we gathered these key insights:
+        
+    #     #### Regarding sales dynamics:
+    #     - It is clear that the top games are themselves dominated by other top games. There are some key players in the market, that are hogs of sales metrics at the top.
+    #         - Outside of this, however, there is still a sizable market, within our top 1500 most of our games are earning hundreds of thousands of dollars in revenue.
+    #     - Though the games market is filled with a majority of indie games, AAA and AA publishing tends to correlate with higher revenue and sales than indie publishing
+    #     - For the first few games, developers of top games tend to make around the same in sales per game, and evidently those with the most experience, 5+ games made, have the largest
+    #     amount of success.
+    #     - There seems to be positive correlation between price ranges and revenue, however there is also a huge market in "Free to Play" games, with free games earning more on average than
+    #     games priced under 10 and between 10 and 50
 
-        #### Regarding Time:
-        - There is a lot of "noise" in the specific days of release. Some days see a lot of game releases while others see barely any at all.
-        - There does not seem to be any specific release month or day that correlates heavily with sales.
-        - Our sales per month or day naturally become diluted as our game ages.
-            - Though this an obvious point, it is still worth reminding!
-            - With more informative data, we may be able to better understand how a game's sales evolve over time. Our analysis is limited!
+    #     #### Regarding Time:
+    #     - There is a lot of "noise" in the specific days of release. Some days see a lot of game releases while others see barely any at all.
+    #     - There does not seem to be any specific release month or day that correlates heavily with sales.
+    #     - Our sales per month or day naturally become diluted as our game ages.
+    #         - Though this an obvious point, it is still worth reminding!
+    #         - With more informative data, we may be able to better understand how a game's sales evolve over time. Our analysis is limited!
 
-        These findings suggest that the game market does not have a specific preference for release timings.
-        - There may be lots of confounding factors for this particular analysis making it difficult to isolate the impact of timing on sales
-            - Different marketing and promotion campaigns might influence game sales regardless of release date.
-            - High quality games might be selling well regardless of good timing. Since our list is of top contendors, this may be the case.
+    #     These findings suggest that the game market does not have a specific preference for release timings.
+    #     - There may be lots of confounding factors for this particular analysis making it difficult to isolate the impact of timing on sales
+    #         - Different marketing and promotion campaigns might influence game sales regardless of release date.
+    #         - High quality games might be selling well regardless of good timing. Since our list is of top contendors, this may be the case.
 
-        #### Regarding review scores for games:
-        - The lack of correlation between review score and revenue within our top games suggests that there may be other factors at play other than review to drive commercial success.
-            - Effective marketing, for example, might make certain games profitable despite game quality. Though anecdotal, we can think of several games that fit this remark such as 
-            Cyberpunk 2077 and Warcraft III Reforged.
-            - It may also be that certain games have a "niche" audience. Some games may cater to specific audiences, where the general audience may find them overall lower in quality.
+    #     #### Regarding review scores for games:
+    #     - The lack of correlation between review score and revenue within our top games suggests that there may be other factors at play other than review to drive commercial success.
+    #         - Effective marketing, for example, might make certain games profitable despite game quality. Though anecdotal, we can think of several games that fit this remark such as 
+    #         Cyberpunk 2077 and Warcraft III Reforged.
+    #         - It may also be that certain games have a "niche" audience. Some games may cater to specific audiences, where the general audience may find them overall lower in quality.
 
-        Important Caveats 🔴:
+    #     Important Caveats 🔴:
 
-        Survivorship Bias / Selecting on the Dependent Variable
-        - For all conclusions and insights drawn for this dataset, we must factor in the fact that we are selecting only the **top** games in revenue for our analysis. We are also selecting on a pretty recently dataset!
-        - Having a focus on these games means our analysis is limited to games to that already are successful, we cannot say that traits in these games are correlated to success simply because they are already successful, we do not know
-        whether games that are unsuccessful share successful traits or not!
-        """
-    )
+    #     Survivorship Bias / Selecting on the Dependent Variable
+    #     - For all conclusions and insights drawn for this dataset, we must factor in the fact that we are selecting only the **top** games in revenue for our analysis. We are also selecting on a pretty recently dataset!
+    #     - Having a focus on these games means our analysis is limited to games to that already are successful, we cannot say that traits in these games are correlated to success simply because they are already successful, we do not know
+    #     whether games that are unsuccessful share successful traits or not!
+    #     """
+    # )

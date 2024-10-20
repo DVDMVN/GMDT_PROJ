@@ -149,7 +149,9 @@ st.subheader("Platforms Info Analysis", divider=True)
 st.write(
     """
         Within this branch, we want to investigate the following questions:
-        - TODO: ADD EXPLORATION QUESTIONS
+        - What does our platform distribution look like?
+        - Are users similar to critic review? Why might they be different?
+        - What genres of games are most popular? What genres of games are most highly rated?
     """
 )
 
@@ -179,7 +181,9 @@ st.pyplot(plot_platform_frequencies())
 
 st.write(
     """
-        TODO: COMMENT
+        Here we have plotted our distribution of platforms for our dataset.
+        - Keep in mind, games can be part of multiple different platforms. After exploding our platform_info feature, we noticed that we had nearly triple the number of observations.
+        - Games on different platforms can be under the same name, but function almost entirely different. As mentioned before, things like hardware limitations, and chagne sin control scheme.
     """
 )
 
@@ -202,7 +206,7 @@ st.pyplot(plot_most_popular_platforms_boxplots())
 
 st.write(
     """
-        TODO: COMMENT
+        Here we have plotted metascore boxplots for 5 of our most common platforms.
     """
 )
 
@@ -228,7 +232,7 @@ st.pyplot(plot_critic_review_count_distribution())
 
 st.write(
     """
-        TODO: COMMENT
+        Looking at our distribution for critic review scores, we can see a relatively normal distribution.
     """
 )
 
@@ -263,7 +267,7 @@ st.pyplot(plot_most_popular_pc_games_by_critics_and_users())
 
 st.write(
     """
-        TODO: COMMENT
+        PC: From these plots, we can notice that our criticaly review top games are completely different from our most popular pc games for our users!
     """
 )
 
@@ -329,7 +333,7 @@ st.pyplot(fig_1)
 
 st.write(
     """
-        TODO: COMMENT
+        This trend continues when we allow all other platforms within.
     """
 )
 
@@ -337,7 +341,7 @@ st.pyplot(fig_2)
 
 st.write(
     """
-        TODO: COMMENT
+        
     """
 )
 

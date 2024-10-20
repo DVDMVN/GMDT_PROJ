@@ -296,7 +296,7 @@ with review_scores_tab:
         By grouping then sorting on this new feature, we can get a listing for the "most liked" publishers, that is, the publishers with the highest positive to negative review count.
 
         We select on a metric such as "at least 1000 reviews total" in order to filter for those publishers who have very few reviews, but have a high ratio.
-        - Selecting on "at least 1000" is somewhat arbitrary, but as noted before, trivially it indicates a high degree of success.
+        - Selecting on "at least 1000" is somewhat arbitrary, but as noted before, it can reasonably be considered a high degree of success.
 
         We can repeat this pattern again for developers
         """
@@ -403,15 +403,14 @@ with release_date_tab:
     st.write(
         """
         Within this branch, we want to investigate the following questions:
-        - What does the total distribution of reviews look like?
-        - Do our reviews have any bearing on our success? Do more reviews give us more success?
-        - Does having a good positive to negative review ratio correlate with success?
+        - Is the game market becoming more one sided? Is it becoming more winner take all over the years?
+        - How has the popularity of genres varied with time?
         """
     )
 
     st.write(
         """
-        We begin with plotting our distributions:
+        The get a lay of the snapshot timespan, we plot the distribution of game releases per year.
         """
     )
 
@@ -431,7 +430,11 @@ with release_date_tab:
 
     st.write(
         """
-        TODO: COMMENT
+        From this, we can see that most of our games are from recent years. Though Steam has existed for a long time, they often retire very old games as new games come in.
+        - Other game market platforms, such as GOG, do not have such practice. Buying a game on Steam has a clause that it may be eventually retired.
+
+        From here, we can investigate a question; whether games from past years see more or less total reviews than games released nearer to the present.
+        - Increases or decreases in total reviews might tell us something about the market interest in newer games.
         """
     )
 
@@ -444,7 +447,7 @@ with release_date_tab:
             y=reviews_by_year.index,
             orient='h',
         )
-        plt.xlabel('Average total review count')
+        plt.xlabel('Total review count')
         plt.ylabel('Release year')
         plt.title('Total review counts on Steam by year')
         return fig
@@ -452,29 +455,12 @@ with release_date_tab:
 
     st.write(
         """
-        TODO: COMMENT
-        """
-    )
-
-    # How does the release year affect our review score?
-    def plot_release_year_to_average_total_review_count_per_game() -> plt.Figure:
-        fig = plt.figure(figsize=(12, 6))
-        reviews_by_year = all_55000_steam.groupby("release_year")['total_review_count'].mean()
-        reviews_by_year
-        sns.barplot(
-            x=reviews_by_year.values,
-            y=reviews_by_year.index,
-            orient='h',
-        )
-        plt.xlabel('Average total review count')
-        plt.ylabel('Release year')
-        plt.title('Average review counts per game by release year')
-        return fig
-    st.pyplot(plot_release_year_to_average_total_review_count_per_game())
-
-    st.write(
-        """
-        TODO: COMMENT
+        Evidently, we do not have a completely straightforward answer. From this plot we can see a few things:
+        - The total number of reviews from all games released in 2012 outnumbers all other years except 2017.
+            - Perhaps there were some major releases from this era that became timeless collection pieces. There may be an element of nostalgia for
+            older gamers present in this market.
+            - 2012 saw the release of several breakout consoles, such as the PS4 and XBox One. This spike in reviews could be indicative of a
+            gaming renaissance, stronger engagment in the game market due to major leaps forward in innovation and quality.
         """
     )
     
@@ -529,7 +515,17 @@ with release_date_tab:
 
     st.write(
         """
-        TODO: COMMENT
+        From this distribution graph, we are plotting the total review counts for the top 10 most reviewed games of each year. 
+        We also indicate the proportion of the top 10's sum of reviews to that year's total review count.
+
+        This tells us a lot about market concentration over the years. For games in 2015, for example, with the top 10 taking already more than half of the review counts, this could be indicative that
+        2015 in particular had some breakout games which hogged the limelight.
+        - 2015 saw the release of some of the most highly acclaimed games of all time. A few that come to mind are "The Witcher 3", "Metal Gear Solid V" and "Bloodborne"; all of which have already been
+        immortalized within game culture.
+            - 🌟Its possible that some years see domination by large budget AAA publishers, leaving little room for smaller, indie studios to capture attention!🌟
+
+        From these values, we can observe that the relation between release year and top 10 proportion to the market is not clear (at least not clearly linear). From one year to the next we can see 
+        jumps up and down. Some years see much larger domination than others, and it may be difficult to forecast coming years from this information alone.
         """
     )
 
@@ -567,7 +563,13 @@ with release_date_tab:
 
     st.write(
         """
-        TODO: COMMENT
+        From here, we can try to investigate whether genre has been varying through the years. Here we have plotted some of the more popular genres against the release year, with the bubble's size indicating
+         the proportion of that genre to all other games in that year.
+
+        We can see that "Indie" and "Action" games have been significant proportions of the game marketplace consistently for the past decade. In fact, most genres seem to be quite stable in their proportion to the market.
+        - Notably, however, we can see that "Free to Play" games have been falling down as of recent years. We may want to investigate this further.
+        - Looking at how genres rising and decline over the years may give us a sense of how player preferences shift. If we can identify key factors which may allow us to predict future genre success, we may tailor
+        our games to specific types of gameplay.
         """
     )
 
@@ -602,11 +604,16 @@ with release_date_tab:
 
     st.write(
         """
-        TODO: COMMENT
+        Here we have plotted the popularity of a select few genres over the last decade. From this, we can see that although "Indie" has been relatively similar in proportion through the years, it has grown in size considerably
+        as the general game market continues to grow. We might expect indie games to continue to be prevalent in the market.
+
+        We can observe the dip in "Free to Play" releases from the last 2 years 2020 and 2021. This is interesting, as from other analysis prior, we learned the "Free to Play" games actually take a very sizeable portion of the 
+        marketplace revenue.
+        - This genre is becoming rarer, but still has a very sizeable stake in the marketplace in terms of success!
+
+        By examining these trends, we might get a better sense of the current player demographics, where they originate from, and what current opportunities we are missing.
         """
     )
-
-
 
 with genres_tab:
     st.write("### Genres Analysis")
@@ -790,28 +797,37 @@ with st.container():
         """,
         unsafe_allow_html=True
     )
-    # Your container content here
-    st.write(
-        """
-        From our qualitative analysis, we gathered these key insights:
+    with st.container(border=True):
+        st.write(
+            """
+            From our qualitative analysis, we gathered these key insights:
 
-        #### Regarding reviews: 
-        - There seems to be "dominators" in this distribution. A small number of top-performing games account for the majority of reviews.
-            - This reflects the industry's competitive nature, where a few titles capture most of the attention and player engagement due to factors like higher budgets, marketing, and established fan bases.
-        
-        - Suprisingly, over 9% of games have accumulated more than 1000 reviews, an unexpectedly high figure.
-            - This could be due to social sharing, niche communities, or successful post-launch updates that maintain or grow player engagement.
-            - This indicates a longer tail of the market, some creators are dominators, but there is a long tail of successful games that go unrecognized.
+            #### Regarding reviews: 
+            - There seems to be "dominators" in this distribution. A small number of top-performing games account for the majority of reviews.
+                - This reflects the industry's competitive nature, where a few titles capture most of the attention and player engagement due to factors like higher budgets, marketing, and established fan bases.
+            
+            - Suprisingly, over 9% of games have accumulated more than 1000 reviews, an unexpectedly high figure.
+                - This could be due to social sharing, niche communities, or successful post-launch updates that maintain or grow player engagement.
+                - This indicates a longer tail of the market, some creators are dominators, but there is a long tail of successful games that go unrecognized.
+                - 🌟Niche communities or successful post-launch updates could be contributing to this long tail.🌟
 
-        - A higher "like ratio" tends to correspond with larger player bases.
-            - Positive reception often signals quality or enjoyment, attracting more players through word of mouth and organic growth.
+            - A higher "like ratio" tends to correspond with larger player bases.
+                - Positive reception often signals quality or enjoyment, attracting more players through word of mouth and organic growth.
+            
+            #### Regarding release date:
+            
+            #### Regarding genres:
+            - Our most popular genres seem to be Action, Indie, and Casual.
+                - These genres often offer broad appeal, allowing for a variety of gameplay styles and experiences that attract diverse audiences.
+            
+            - Despite the popularity of certain genres, success in terms of revenue or engagement isn't guaranteed.
+                - Success might depend more on execution, marketing, and innovation rather than the genre itself, showing that not all popular genres translate into high-performing games.
+            """
+        )
+
+        st.write(
+            """
+            Explore genre trends in this dataset with this interactive plot:
+            """
+        )
         
-        
-        #### Regarding genres:
-        - Our most popular genres seem to be Action, Indie, and Casual.
-            - These genres often offer broad appeal, allowing for a variety of gameplay styles and experiences that attract diverse audiences.
-        
-        - Despite the popularity of certain genres, success in terms of revenue or engagement isn't guaranteed.
-            - Success might depend more on execution, marketing, and innovation rather than the genre itself, showing that not all popular genres translate into high-performing games.
-        """
-    )

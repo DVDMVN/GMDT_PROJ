@@ -72,6 +72,7 @@ st.write(
     - **Pricing**: Prices were standardized to utilize floating point format (999 -> 9.99)
     - **List Data**: Many of the features within our datasets have value which are string literals of lists and dictionaries. We reformatted these to their original form
     where neccessary
+    - 
     """
 )
 
@@ -454,10 +455,9 @@ print(get_common_names(all_55000_steam, metacritic, standardize=True))
 )
 st.write(
     """
-    * 113
-    * 33
-    * 413
-    
+    `113`
+    `33`
+    `413`
     
     There are likely some confounding variables that cause our datasets to be quite mismatched, one postulation is that the dates of the snapshots are too far apart. Game marketplaces
     evolve too quickly, old games are cycled out, and newer games are cycled in.
