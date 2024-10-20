@@ -13,6 +13,9 @@ Check our live demo!
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gmdtproj.streamlit.app/)
 
+## Application Structure
+
+This application is structured in an "article" like fashion. This is to mimic what game developers may typically use to gather information, through articles and newsletters. Users may navigate to 'pages', which are fashion in a 'medium' article sort of fashion. Each page is self contained, having information regarding the structure of the page, comprehensive pathing for the page. Much like a quest, we suggest that readers go through our exploration, however players that find the exploration waning may skip straight to the "boss", our key insights gathered from each dataset.
 
 ## File Explanation:
 
