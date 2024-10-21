@@ -630,3 +630,23 @@ st.write(
 st.markdown("[Explore other branches](#branch-exploration)")
 
 st.subheader("Key Insights", divider=True)
+
+with st.container():
+    st.markdown(
+        """
+        <style>
+        .stContainer > div {
+            width: 150%;
+            margin: auto;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.write(
+        """
+        USERS AND CRITICS DISAGREE
+        GENRE STUFF
+        """
+    )

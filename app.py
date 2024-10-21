@@ -1,8 +1,8 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="DEADMAN_PROJ",
-    page_icon="🥴",
+    page_title="GMDT_PROJ",
+    page_icon="🎮",
 )
 
 welcome = st.Page("welcome.py", title="Welcome", icon="👋")

@@ -11,6 +11,7 @@ from sklearn.linear_model import LinearRegression
 from utils import load_all_55000_steam
 
 all_55000_steam = load_all_55000_steam()
+plt.style.use('ggplot')
 
 def perform_feature_engineering(all_55000_steam) -> pd.DataFrame:
     # Categorizing Price
@@ -136,7 +137,7 @@ with object_stats_tab:
     st.write("### Categorical feature statistics")
     st.write(all_55000_steam[all_55000_steam.select_dtypes(include=['object', 'category']).columns].describe())
 
-
+@st.cache_data
 def plot_correlation_heatmap() -> go.Figure:
     corr_matrix = all_55000_steam.select_dtypes(include='number').drop('app_id', axis=1).corr()
     corr_matrix = np.round(corr_matrix, 2)
@@ -182,9 +183,9 @@ with review_scores_tab:
     st.write(
         """
         Within this branch, we want to investigate the following questions:
-        - What does the total distribution of reviews look like?
-        - Do our reviews have any bearing on our success? Do more reviews give us more success?
-        - Does having a good positive to negative review ratio correlate with success?
+        - What does the total distribution of reviews look like? Is attention divided or dominated?
+        - What publishers and developers are most liked?
+        - Do our reviews have bearing on our success? How much does having a 'better score' help our games?
         """
     )
 
@@ -193,6 +194,8 @@ with review_scores_tab:
         We begin with plotting our distributions:
         """
     )
+    
+    @st.cache_data
     def plot_positive_and_negative_reviews_distribution() -> plt.Figure:
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
         axes: list[plt.Axes] = axes.ravel()
@@ -228,6 +231,7 @@ with review_scores_tab:
         """
     )
 
+    @st.cache_data
     def plot_frequency_of_games_with_binned_total_review_counts() -> plt.Figure:
         fig = plt.figure(figsize=(15, 6))
 
@@ -264,6 +268,8 @@ with review_scores_tab:
         With positive review counts and negative review counts, we can encode a new column "positive_to_negative" which is the ratio between positive and negative review counts.
         """
     )
+
+    @st.cache_data
     def plot_most_liked_publishers() -> plt.Figure:
         min_total_reviews = 1000
         most_positive_publishers = all_55000_steam.groupby('publishers').agg(positive=('positive_reviews', 'sum'),
@@ -293,15 +299,28 @@ with review_scores_tab:
 
     st.write(
         """
-        By grouping then sorting on this new feature, we can get a listing for the "most liked" publishers, that is, the publishers with the highest positive to negative review count.
+        By grouping on publishers then sorting on this new feature, we can get a listing for the "most liked" publishers, that is, the publishers with the highest 
+        positive to negative review count.
 
-        We select on a metric such as "at least 1000 reviews total" in order to filter for those publishers who have very few reviews, but have a high ratio.
-        - Selecting on "at least 1000" is somewhat arbitrary, but as noted before, it can reasonably be considered a high degree of success.
+        We select on a metric such as "at least 1000 reviews total" in order to filter out publishers who have very few reviews, but have a high ratio.
+        - Selecting on "at least 1000" is somewhat arbitrary, but as noted before, it can reasonably be considered a high degree of success. In this sense, we are looking
+        at the top 20 most liked 'successful' publishers.
 
-        We can repeat this pattern again for developers
+        Investigating these names a little further, we find that 🌟all of them are 'indie publishers🌟!
+        - Indie publishers seem to dominate in the "likeability lists". While they do not get as much attention in terms of pure review counts, it seems that they are able
+        to produce games that are heavily favored.
+        - This could be due to them having a more accessible price point (see [our other analysis](https://gmdtproj.streamlit.app/top_1500_steam_analysis#sales-trends)).
+        When spending larger amounts of money, users tend to expect a more quality result. User satisfaction might be amplified by a good game, paired with a lower price.
+        - This may also be due to the stronger communal sense that 'indie' publishers have. Indie game's lower budgets might also be foster a sense of connection with their
+        audiences.
+            - The publisher "ConcernedApe" is actually also the single sole developer of the game "Stardew Valley", which is well known to be a very close-knit community, 
+            where interactions with the developer are often [[2](https://thinglabs.io/meet-concernedape-the-master-behind-stardew-valley-and-beyond)].
+        
+        We can repeat this analysis again, but this time for developers:
         """
     )
 
+    @st.cache_data
     def plot_most_liked_developers() -> plt.Figure:
         min_total_reviews = 1000
         most_positive_developers = all_55000_steam.groupby('developers').agg(positive=('positive_reviews', 'sum'),
@@ -331,10 +350,14 @@ with review_scores_tab:
 
     st.write(
         """
-        Some may recognize a few names on here, namely "David Capello", the author of many great tools, most notable being "Aesprite", a powerful and aesthetic pixel art and animation tool.
+        We see a similar trend in our most liked successful developers. In fact, some of these names on the list are "the same". Indie developers may use their developer
+        name as their publisher name as well, some of them keep it the same.
+        - Some may recognize a few names on here, namely "David Capello", the author of many great tools, most notable being "Aesprite", a powerful and aesthetic pixel art and animation tool.
+        "Igana Studio" is the publisher name he chooses to use.
         """
     )
 
+    @st.cache_data
     def plot_most_liked_owners() -> plt.Figure:
         most_positive_owner_group = all_55000_steam.groupby('owners').agg(positive=('positive_reviews', 'sum'),
                                                                             negative=('negative_reviews', 'sum'),
@@ -365,19 +388,20 @@ with review_scores_tab:
         Here we are grouping by owner estimations. By taking our owner estimations as ordinal, we can see a trend emerge in "like ratio" vs owner estimation.
         - 🌟As our "like ratio" increases, so too does our playerbase on average🌟. We can see this trend somewhat fall off as we enter bins of the largest magnitudes, however this does seem to hold
         for bins all the way up to 10 million owners.
+            - Our games with the most owners might be the dominant AAA games in the market (see [our other analysis](https://gmdtproj.streamlit.app/metacritic_analysis) and our release date branch).
         """
+        
     )
 
+    @st.cache_data
     def plot_positive_and_negative_review_counts_regression():
-        # Linear regression model
         X = all_55000_steam[['positive_reviews']]
         y = all_55000_steam['negative_reviews']
         model = LinearRegression().fit(X, y)
         predicted_negative_review_count = model.predict(X)
 
-        print(model.coef_)
+        r_2 = model.score(X, y)
 
-        # Scatter plot with regression line
         fig = px.scatter(
             all_55000_steam,
             x="positive_reviews",
@@ -387,14 +411,16 @@ with review_scores_tab:
         )
         fig.add_traces(px.line(all_55000_steam, x="positive_reviews", y=predicted_negative_review_count).data)
 
-        return fig
-    st.plotly_chart(plot_positive_and_negative_review_counts_regression())
+        return fig, r_2
+    fig, r_2 = plot_positive_and_negative_review_counts_regression()
+    st.plotly_chart(fig)
 
     st.write(
         """
         We can quantify the average ratio between positive and negative reviews for games on steam using a regression model.
         - From this, we can see that, on average, for every positive review we can expect to have around 0.15 of a negative review.
-        """
+        - This is one of our stronger correlations (R = 0.78), we can achieve an $R^2$ value of {r_2:.2f}
+        """.format(r_2=r_2)
     )
 
 
@@ -411,10 +437,11 @@ with release_date_tab:
     st.write(
         """
         The get a lay of the snapshot timespan, we plot the distribution of game releases per year.
+        - To smooth the release date distribution a little, we binned the release dates into years.
         """
     )
 
-    # By release year, lets see the trends in game review scores per year.
+    @st.cache_data
     def plot_release_date_distribution() -> plt.Figure:
         fig = plt.figure(figsize=(12, 6))
         sns.countplot(
@@ -430,7 +457,7 @@ with release_date_tab:
 
     st.write(
         """
-        From this, we can see that most of our games are from recent years. Though Steam has existed for a long time, they often retire very old games as new games come in.
+        From this, we can see that most of our games are from recent years. Though Steam has existed for a long time (Since Sept. 12 2003), they often retire very old games as new games come in.
         - Other game market platforms, such as GOG, do not have such practice. Buying a game on Steam has a clause that it may be eventually retired.
 
         From here, we can investigate a question; whether games from past years see more or less total reviews than games released nearer to the present.
@@ -438,10 +465,10 @@ with release_date_tab:
         """
     )
 
+    @st.cache_data
     def plot_release_year_to_total_reviews() -> plt.Figure:
         fig = plt.figure(figsize=(12, 6))
         reviews_by_year = all_55000_steam.groupby("release_year")['total_review_count'].sum()
-        reviews_by_year
         sns.barplot(
             x=reviews_by_year.values,
             y=reviews_by_year.index,
@@ -529,7 +556,7 @@ with release_date_tab:
         """
     )
 
-# How does release date correlate at all with genre?
+    @st.cache_data
     def plot_bubble_proportions_of_genre_by_year() -> plt.Figure:
         all_55000_steam_copy = all_55000_steam.copy(deep=True)
         all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
@@ -573,6 +600,7 @@ with release_date_tab:
         """
     )
 
+    @st.cache_data
     def plot_genres_of_interest_trends() -> plt.Figure:
         all_55000_steam_copy = all_55000_steam.copy(deep=True)
         all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
@@ -621,17 +649,21 @@ with genres_tab:
     st.write(
         """
         Within this branch, we want to investigate the following questions:
+        - What the genre distribution look like?
         - What are our most popular genres?
-        - What genres correlate most with success?
+        - Can we find any genres that, in particular, games at the top seem to take?
         """
     )
 
     st.write(
         """
-        
+        Because our genre feature is actually the game's "combination of genres", we will start with plotting our genre combinations.
+        - In some sense, a mixture of genres can be considered a different genre on its own. For this reason, it is still insightful to note genre 
+        combinations as well as the individualized genres.
         """
     )
 
+    @st.cache_data
     def plot_top_n_genres_distribution(n = 10):
         genre_frequencies = pd.DataFrame(
             {
@@ -639,7 +671,6 @@ with genres_tab:
                 'count': all_55000_steam['genres'].value_counts().values
             }
         )
-        # genre_frequencies
         top_genre_frequencies = genre_frequencies.head(n)
 
         fig = plt.figure(figsize=(15, 6))
@@ -655,7 +686,6 @@ with genres_tab:
         plt.ylabel("Count")
         plt.xticks(rotation=45)
         return fig
-        # return top_genre_frequences
 
     st.pyplot(plot_top_n_genres_distribution())
 
@@ -663,9 +693,12 @@ with genres_tab:
         """
         We have plotted the top genre combinations by frequency. Because there are so many genre combinations (around 5 thousand), we are only plotting the top 10.
         - Somewhat notable is the frequent occurance of the "Action" genre on this list. Combinations of "Action", "Indie" and "Casual" seem to be the most common in genre.
+
+        By "exploding" our genre combinations (separating to individual), we can look closer at how the individual genres are distributed:
         """
     )
 
+    @st.cache_data
     def plot_exploded_genre_frequencies() -> plt.Figure:
         genres_exploded = all_55000_steam['genres'].str.split(', ').explode()
         genre_counts = genres_exploded.groupby(genres_exploded).size().reset_index(name='genre_count')
@@ -689,15 +722,17 @@ with genres_tab:
 
     st.write(
         """
-        Instead of plotting by genre combinations (as is defaulted by the dataset), we "explode" the combinations into their individual parts and plot their frequencies.
-        
-        By separation, we end up with only 28 unique genres total! We plot all of them and their frequencies here.
-        - From this, we can note that "Indie", "Action", and "Casual" are truly our most common genres of game (though "Indie" might be less of a genre and more of type).
-        - Also interesting to note is that "Free to Play" is a very uncommon genre, nearly dead last next to "Movie".
+        After "explosion", we end up with only 28 unique genres total.
+        - From our distribution, we can note that "Indie", "Action", and "Casual" are indeed our most common genres of game.
+        - Evidently, Steam allows for many "non-game' related genres. We have genres like "Photo Editing", "Design & Illustration", "Movie", etc. Steam does provide a platform for various
+        software that are not games, however, just from this distribution on genres, we can know that these applications are very uncommon.
+            - We actually have very few 'game descriptive' genres, that is, genres that describe the gameplay of our games. Game developers looking to target a niche community should not
+            look to do so from this listing.
         """
     )
 
-    def plot_genres_combination_plots() -> list[plt.Figure, plt.Figure, plt.Figure]:
+    @st.cache_data
+    def plot_genres_combination_plots() -> plt.Figure:
         def split_genres(x):
             if type(x) is str:
                 return x.split(', ')
@@ -708,7 +743,7 @@ with genres_tab:
         avg_revenue_by_genre = all_55000_steam_genres_exploded.groupby('genres_split')['total_review_count'].mean().reset_index()
         avg_revenue_by_genre = avg_revenue_by_genre.sort_values(by='total_review_count', ascending=False)
 
-        fig_1 = plt.figure(figsize=(15, 6))
+        fig = plt.figure(figsize=(15, 6))
         sns.barplot(
             data=avg_revenue_by_genre,
             x='total_review_count',
@@ -720,66 +755,159 @@ with genres_tab:
         plt.title("Genres by average total review count")
         plt.xlabel('Average total review count')
         plt.ylabel('Genre')
+        return fig
+    st.pyplot(plot_genres_combination_plots())
 
-        avg_revenue_by_genre_group = all_55000_steam.groupby('genres')['total_review_count'].mean().reset_index()
-        avg_revenue_by_genre_group = avg_revenue_by_genre_group.sort_values(by='total_review_count', ascending=False)
+    st.write(
+        """
+        Here we have plotted the average total review count for each individual genre.
+        - We can see that some of the rarer genres, such as "Massively Multiplayer", or "Free to Play", have suprisingly great average review counts despite their frequency.
+            - These rarer frequency games are somewhat 'outliers' and therefore may not give us a real assessment of the genre as a whole. Without sufficient frequency within a genre, our
+            analysis lacks integrity.
+            - 🌟This distribution however does give us a sense of potential success🌟. It shows that rarer genre mixtures can potentially reach higher charts than the averages of other genres.
+        """
+    )
 
-        fig_2 = plt.figure(figsize=(15, 6))
-        sns.barplot(
-            data=avg_revenue_by_genre_group.head(20),
-            x='total_review_count',
-            y='genres',
-            hue='genres',
-            orient='h',
-            dodge=False
-        )
-        plt.title(f"Top {20} genre combinations by average total review count")
-        plt.xlabel('Average total review count')
-        plt.ylabel('Genre combination')
-
+    @st.cache_data
+    def plot_genre_frequencies_with_success_rate() -> plt.Figure:
+        n = 500
         genre_group_sizes = all_55000_steam.groupby('genres').size().reset_index(name='genre_count')
-        avg_revenue_by_genre_group_with_freq = pd.merge(avg_revenue_by_genre_group, genre_group_sizes, how='left', on='genres')
+        genre_total_reviews = all_55000_steam.groupby('genres')['total_review_count'].median().reset_index(name='average_total_review_count')
+        genres_with_at_least_n_games = genre_group_sizes[genre_group_sizes['genre_count'] >= 500]['genres'].tolist()
+        # print(genres_with_at_least_n_games.__len__())
 
-        fig_3 = plt.figure(figsize=(15, 6))
-        sns.barplot(
-            data=avg_revenue_by_genre_group_with_freq.head(20),
-            x='genre_count',
+        all_55000_steam_within_genre_list = all_55000_steam[all_55000_steam['genres'].isin(genres_with_at_least_n_games)]
+        all_55000_steam_within_genre_list = pd.merge(all_55000_steam_within_genre_list, genre_total_reviews, on='genres', how='left')
+        all_55000_steam_within_genre_list['over_1000_total_reviews'] = all_55000_steam_within_genre_list['total_review_count'] > 1000
+        all_55000_steam_within_genre_list = all_55000_steam_within_genre_list.sort_values(by='genres')
+
+        stacked_data = all_55000_steam_within_genre_list.groupby(['genres', 'over_1000_total_reviews']).size().unstack()
+        stacked_data['total_count'] = stacked_data.sum(axis=1)
+        stacked_data = stacked_data.reset_index()
+        stacked_data.index.name = None
+        stacked_data['percentage_successful'] = (stacked_data[True] / stacked_data['total_count']) * 100
+        stacked_data['percentage_successful'] = stacked_data['percentage_successful'].round(2)
+
+        fig = plt.figure(figsize=(12, 8))
+
+        ax = sns.histplot(
+            data=all_55000_steam_within_genre_list,
             y='genres',
-            hue='genres',
-            orient='h',
-            dodge=False
+            hue='over_1000_total_reviews',
+            multiple='stack',
         )
-        plt.title(f"Top {20} genre combinations by average total review count: frequencies")
-        plt.xlabel('Count')
-        plt.ylabel('Genre combination')
-        return fig_1, fig_2, fig_3
-    fig_1, fig_2, fig_3 = plot_genres_combination_plots()
-    st.pyplot(fig_1)
+
+        ax.bar_label(ax.containers[0], labels=[" " + str(x) + '% True' for x in stacked_data['percentage_successful']])
+        ax.bar_label(ax.containers[1], labels=["  " + str(x) for x in stacked_data['total_count']])
+        ax.legend_.set_title("Success status")
+        for text, label in zip(ax.legend_.texts, ['No', 'Yes']):
+            text.set_text(label)
+        plt.title("Popular genres frequencies and their success rates", y=1.07)
+        ax.text(x=0.5, y=1.03, s=f"Popular = with at least {n} games | Success = with over 1000 total reviews", fontsize=10, alpha=0.75, ha='center', va='bottom', transform=ax.transAxes)
+        plt.xlabel("Count")
+        plt.ylabel("Genre(s)")
+
+        return fig
+    st.pyplot(plot_genre_frequencies_with_success_rate())
 
     st.write(
         """
-        We can utilize this new "exploded" singular genre feature to take a look at correlations between genre and success. Here we have plotted genre against average total review counts.
-        - Free to Play suddenly emerges as our number two in average total review counts. Though this genre is highly uncommon, it seems that there is a large market for it.
-        - We can also see something similar in "Massive Multiplayer" and a few other genres.
+        Here we plot only genre combinations with some higher degree of integrity. We also differentiate by genre combinations instead of individual genres; with our limited set of gameplay descriptors, 
+        combinations give us a better specification than the parts. 
+        - We define success by having over 1000 total reviews (see notes from before), and we also are filtering for popular genres, in this case meaning
+        at least 500 games were made with the same genre.
+        - Having at least 500 is an arbitraryish benchmark for "common enough". With a dataset of 50000 +, 500 felt like a reasonable "1%", which could give our analysis on these genres some degree of integrity.
+
+        From this we can qualitatively observe certain genre combinations having better success rates than others. We can also see that certain genre combinations have commonalities in parts.
+        - Certain genres, like RPGs and strategy games, have higher success rates. Perhaps they appeal more to players, or at least the established expectations are easier to reach.
+        - The low success of games with only the indie genre and the relatively high rate of games that are indie suggests that indie games require some 'other factors' to stand out. Perhaps indie games require some emphasis
+        on stronger or unique gameplay features.
         """
     )
 
-    st.pyplot(fig_2)
+    # def plot_genres_combination_plots() -> list[plt.Figure, plt.Figure, plt.Figure]:
+    #     def split_genres(x):
+    #         if type(x) is str:
+    #             return x.split(', ')
+    #         else:
+    #             return x
+    #     all_55000_steam['genres_split'] = all_55000_steam['genres'].apply(split_genres)
+    #     all_55000_steam_genres_exploded = all_55000_steam.explode('genres_split')
+    #     avg_revenue_by_genre = all_55000_steam_genres_exploded.groupby('genres_split')['total_review_count'].mean().reset_index()
+    #     avg_revenue_by_genre = avg_revenue_by_genre.sort_values(by='total_review_count', ascending=False)
 
-    st.write(
-        """
-        Doing the same, but now again with our "combination" of genres, we can note again a start difference between frequency and average total review counts. It seems that the less 
-        common genres are not necessarily less successful.
-        """
-    )
+    #     fig_1 = plt.figure(figsize=(15, 6))
+    #     sns.barplot(
+    #         data=avg_revenue_by_genre,
+    #         x='total_review_count',
+    #         y='genres_split',
+    #         hue='genres_split',
+    #         orient='h',
+    #         dodge=False
+    #     )
+    #     plt.title("Genres by average total review count")
+    #     plt.xlabel('Average total review count')
+    #     plt.ylabel('Genre')
 
-    st.pyplot(fig_3)
+    #     avg_revenue_by_genre_group = all_55000_steam.groupby('genres')['total_review_count'].mean().reset_index()
+    #     avg_revenue_by_genre_group = avg_revenue_by_genre_group.sort_values(by='total_review_count', ascending=False)
 
-    st.write(
-        """
-        To qualify the last statement, we can keep the ordering, but now plot frequencies in place of average total counts.
-        """
-    )
+    #     fig_2 = plt.figure(figsize=(15, 6))
+    #     sns.barplot(
+    #         data=avg_revenue_by_genre_group.head(20),
+    #         x='total_review_count',
+    #         y='genres',
+    #         hue='genres',
+    #         orient='h',
+    #         dodge=False
+    #     )
+    #     plt.title(f"Top {20} genre combinations by average total review count")
+    #     plt.xlabel('Average total review count')
+    #     plt.ylabel('Genre combination')
+
+    #     genre_group_sizes = all_55000_steam.groupby('genres').size().reset_index(name='genre_count')
+    #     avg_revenue_by_genre_group_with_freq = pd.merge(avg_revenue_by_genre_group, genre_group_sizes, how='left', on='genres')
+
+    #     fig_3 = plt.figure(figsize=(15, 6))
+    #     sns.barplot(
+    #         data=avg_revenue_by_genre_group_with_freq.head(20),
+    #         x='genre_count',
+    #         y='genres',
+    #         hue='genres',
+    #         orient='h',
+    #         dodge=False
+    #     )
+    #     plt.title(f"Top {20} genre combinations by average total review count: frequencies")
+    #     plt.xlabel('Count')
+    #     plt.ylabel('Genre combination')
+    #     return fig_1, fig_2, fig_3
+    # fig_1, fig_2, fig_3 = plot_genres_combination_plots()
+    # st.pyplot(fig_1)
+
+    # st.write(
+    #     """
+    #     We can utilize this new "exploded" singular genre feature to take a look whether there is a trend between between genre and success. Here we have plotted genre against average total review counts.
+    #     - Free to Play suddenly emerges as our number two in average total review counts. Though this genre is highly uncommon, it seems that there is a large market for it.
+    #     - We can also see something similar in "Massive Multiplayer" and a few other genres.
+    #     """
+    # )
+
+    # st.pyplot(fig_2)
+
+    # st.write(
+    #     """
+    #     Doing the same, but now again with our "combination" of genres, we can note again a start difference between frequency and average total review counts. It seems that the less 
+    #     common genres are not necessarily less successful.
+    #     """
+    # )
+
+    # st.pyplot(fig_3)
+
+    # st.write(
+    #     """
+    #     To qualify the last statement, we can keep the ordering, but now plot frequencies in place of average total counts.
+    #     """
+    # )
 
 st.markdown("[Explore other branches](#branch-exploration)")
 
@@ -800,34 +928,223 @@ with st.container():
     with st.container(border=True):
         st.write(
             """
-            From our qualitative analysis, we gathered these key insights:
-
-            #### Regarding reviews: 
-            - There seems to be "dominators" in this distribution. A small number of top-performing games account for the majority of reviews.
-                - This reflects the industry's competitive nature, where a few titles capture most of the attention and player engagement due to factors like higher budgets, marketing, and established fan bases.
-            
-            - Suprisingly, over 9% of games have accumulated more than 1000 reviews, an unexpectedly high figure.
-                - This could be due to social sharing, niche communities, or successful post-launch updates that maintain or grow player engagement.
-                - This indicates a longer tail of the market, some creators are dominators, but there is a long tail of successful games that go unrecognized.
-                - 🌟Niche communities or successful post-launch updates could be contributing to this long tail.🌟
-
-            - A higher "like ratio" tends to correspond with larger player bases.
-                - Positive reception often signals quality or enjoyment, attracting more players through word of mouth and organic growth.
-            
-            #### Regarding release date:
-            
-            #### Regarding genres:
-            - Our most popular genres seem to be Action, Indie, and Casual.
-                - These genres often offer broad appeal, allowing for a variety of gameplay styles and experiences that attract diverse audiences.
-            
-            - Despite the popularity of certain genres, success in terms of revenue or engagement isn't guaranteed.
-                - Success might depend more on execution, marketing, and innovation rather than the genre itself, showing that not all popular genres translate into high-performing games.
+            **🌟Achievable Success🌟**
             """
         )
+
+        def plot_frequency_of_games_with_binned_total_review_counts() -> plt.Figure:
+            fig = plt.figure(figsize=(15, 6))
+
+            ax = sns.countplot(
+                data=all_55000_steam,
+                x='total_review_bins',
+            )
+            values = all_55000_steam['total_review_bins'].value_counts(sort=False).values / all_55000_steam['total_review_bins'].__len__()
+            values = np.round(values * 100, 2)
+            values = values.astype(str)
+            values = np.array([f'{v}%' for v in values])
+
+            ax.bar_label(container=ax.containers[0], labels=values)
+
+            plt.title('Frequency of games with binned total review counts')
+            plt.xlabel('Binned total review counts')
+            plt.ylabel('Count')
+
+            return fig
+        st.pyplot(plot_frequency_of_games_with_binned_total_review_counts())
 
         st.write(
             """
-            Explore genre trends in this dataset with this interactive plot:
+            - Over 9% of games can reach and surpass 1000 total reviews!
+                - This matches a finding by VGInsights on their analysis of the steam market in 2020 [[4](https://vginsights.com/insights/article/infographic-indie-game-revenues-on-steam)].
+            - Reaching success is feasible for many creators; dominators do not pull all the success away from smaller creators.
             """
         )
+
+    # Genres
+    with st.container(border=True):
+        st.write(
+            """
+            **🌟Adapting Genre Trends🌟**
+            """
+        )
+
+        pick_from_genre_list = ['Massively Multiplayer', 'Early Access', 'Racing', 'Free to Play', 'Strategy', 'RPG', 'Indie', 'Casual', 'Adventure', 'Action']
+
+        picked_genres = st.multiselect("Pick genres to plot:", pick_from_genre_list, default=['Free to Play', 'Indie', 'Strategy'])
+        def plot_genres_of_interest_trends_plotly(genres_of_interest: list[str] = ["Free to Play", "Indie", "Strategy"]) -> go.Figure:
+            all_55000_steam_copy = all_55000_steam.copy(deep=True)
+            all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
+            all_55000_steam_exploded_genres = all_55000_steam_copy.explode('genres')
+            
+            
+            genre_counts = all_55000_steam_exploded_genres.groupby(['release_year', 'genres']).size().reset_index(name='count')
+            total_genres_per_year = all_55000_steam_exploded_genres.groupby('release_year').size().reset_index(name='total_genres')
+            
+            
+            genre_proportions = pd.merge(genre_counts, total_genres_per_year, on='release_year')
+            
+            
+            genre_proportions_filtered = genre_proportions[(genre_proportions['total_genres'] > 1000) & 
+                                                        (genre_proportions['count'] >= 60)]
+            
+            
+            genre_trends = genre_proportions_filtered[genre_proportions_filtered['genres'].isin(genres_of_interest)]
+            colors = pc.qualitative.Plotly
+            
+            fig = px.line(
+                genre_trends,
+                x='release_year',
+                y='count',
+                color='genres',
+                title='Popularity of select game genres over time',
+                labels={'count': 'Count', 'release_year': 'Release year'},
+                markers=True,
+                color_discrete_sequence=colors
+            )
+
+            fig.update_layout(
+                xaxis_title='Release year',
+                yaxis_title='Count',
+                legend_title_text='Genres',
+                width=900,
+                height=600,
+            )
+            
+            return fig
+        st.plotly_chart(plot_genres_of_interest_trends_plotly(picked_genres))
+
+        st.write(
+            """
+            - Indie games, though they have always been quite dominant in the marketplace (in terms of frequency), they are growing in size, staying in proportion to the growing game market. As the 
+            market has grown, more than ever small creators have been creating and releasing games.
+            - Certain other trends, such as "Free to Play" being in the decline, could represent opportunities for developers to capture certain untapped markets, so long as there is still a market to 
+            be had.
+            """
+        )
+
+    with st.container(border=True):
+        st.write(
+            """
+            **🌟Genre Success Rates🌟**
+            """
+        )
+
+        at_least_n_games = st.slider(
+            "Define popular genre game threshold (at least 'this' many games in genre to be popular):", min_value=300, max_value=1500, value=500, step=25
+        )
+        def dashboard_plot_genre_frequencies_and_success_status(n: int = 500) -> go.Figure:
+            genre_group_sizes = all_55000_steam.groupby('genres').size().reset_index(name='genre_count')
+            genre_total_reviews = all_55000_steam.groupby('genres')['total_review_count'].median().reset_index(name='average_total_review_count')
+            genres_with_at_least_n_games = genre_group_sizes[genre_group_sizes['genre_count'] >= n]['genres'].tolist()
+            # print(genres_with_at_least_n_games.__len__())
+
+            all_55000_steam_within_genre_list = all_55000_steam[all_55000_steam['genres'].isin(genres_with_at_least_n_games)]
+            all_55000_steam_within_genre_list = pd.merge(all_55000_steam_within_genre_list, genre_total_reviews, on='genres', how='left')
+            all_55000_steam_within_genre_list['over_1000_total_reviews'] = all_55000_steam_within_genre_list['total_review_count'] > 1000
+            all_55000_steam_within_genre_list = all_55000_steam_within_genre_list.sort_values(by='genres')
+
+            stacked_data = all_55000_steam_within_genre_list.groupby(['genres', 'over_1000_total_reviews']).size().unstack()
+            stacked_data['total_count'] = stacked_data.sum(axis=1)
+            stacked_data = stacked_data.reset_index()
+            stacked_data.index.name = None
+            stacked_data['percentage_successful'] = (stacked_data[True] / stacked_data['total_count']) * 100
+            stacked_data['percentage_successful'] = stacked_data['percentage_successful'].round(2)
+
+            colors = pc.qualitative.Plotly
+
+            fig = px.histogram(
+                    all_55000_steam_within_genre_list,
+                    y='genres',
+                    color='over_1000_total_reviews',
+                    barmode='stack',
+                    histfunc='count',
+                    labels={'over_1000_total_reviews': 'Success status', 'genres': 'Genres'},
+                    color_discrete_map={True: colors[0], False: colors[1]} 
+                )
+
+            success_status_name_changes = {
+                'True': 'Yes',
+                'False': 'No',
+            }
+            fig.for_each_trace(lambda t: t.update(name = success_status_name_changes[str(t.name)],
+                                                legendgroup = success_status_name_changes[str(t.name)],
+                                                hovertemplate = t.hovertemplate.replace(str(t.name), success_status_name_changes[str(t.name)])
+                                                )
+            )
+
+            # Hacky way to add annotations to the bars, since I have a 'stack' mode histogram, I can just add a 'transparent bar' to each in same order with text.
+            for i, row in stacked_data.iterrows():
+                fig.add_trace(go.Bar(
+                    y=[row['genres']],
+                    x=[10] * len(stacked_data), # Text spacing of 10 count
+                    orientation='h',
+                    showlegend=False,
+                    text=f"{row['percentage_successful']}%",
+                    textfont_size=15,
+                    marker_color='rgba(0,0,0,0)',  # Hide bar
+                    hoverinfo='skip'
+                ))
+
+            fig.update_layout(
+                yaxis_title="",
+                xaxis_title="Count",
+                legend_title="Success status",
+                bargap=0.1,
+                height=600,
+                showlegend=True,
+                margin=dict(l=0, r=0, t=50, b=50),
+                title=go.layout.Title(
+                    text=f"Popular genres frequencies and their success rates<br><sup>Popular = with at least {n} games | Success = with over 1000 total reviews</sup>"
+                ),
+                legend=dict(
+                    x=0.85,
+                    y=0.95
+                )
+            )
+            return fig
+        st.plotly_chart(dashboard_plot_genre_frequencies_and_success_status(at_least_n_games))
+
+        st.write(
+            """
+            - Popularity of a genre does not determine success rates.
+            - Popular indie game combinations games tend to have better success rates than games with only the individual indie genre.
+            - We can see RPGs and strategy games are popular and have higher success rates. Perhaps the concepts of RPG and strategy appeal more to players [[3](https://nitemare121.medium.com/why-are-rpgs-popular-a-stunning-world-awaits-3f629adfa1b)]
+            , or at least the established expectations are easier to reach. There are likely many confounding factors at play which make certain genre more successful on average than others.
+            """
+        )
+        
+    # with st.container(border=True):
+    #     st.write(
+    #         """
+    #         From our qualitative analysis, we gathered these key insights:
+
+    #         #### Regarding reviews: 
+    #         - There seems to be "dominators" in this distribution. A small number of top-performing games account for the majority of reviews.
+    #             - This reflects the industry's competitive nature, where a few titles capture most of the attention and player engagement due to factors like higher budgets, marketing, and established fan bases.
+            
+    #         - Suprisingly, over 9% of games have accumulated more than 1000 reviews, an unexpectedly high figure.
+    #             - This could be due to social sharing, niche communities, or successful post-launch updates that maintain or grow player engagement.
+    #             - This indicates a longer tail of the market, some creators are dominators, but there is a long tail of successful games that go unrecognized.
+    #             - 🌟Niche communities or successful post-launch updates could be contributing to this long tail.🌟
+
+    #         - A higher "like ratio" tends to correspond with larger player bases.
+    #             - Positive reception often signals quality or enjoyment, attracting more players through word of mouth and organic growth.
+            
+    #         #### Regarding release date:
+            
+    #         #### Regarding genres:
+    #         - Our most popular genres seem to be Action, Indie, and Casual.
+    #             - These genres often offer broad appeal, allowing for a variety of gameplay styles and experiences that attract diverse audiences.
+            
+    #         - Despite the popularity of certain genres, success in terms of revenue or engagement isn't guaranteed.
+    #             - Success might depend more on execution, marketing, and innovation rather than the genre itself, showing that not all popular genres translate into high-performing games.
+    #         """
+    #     )
+
+    #     st.write(
+    #         """
+    #         Explore genre trends in this dataset with this interactive plot:
+    #         """
+    #     )
         
