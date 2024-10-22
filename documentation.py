@@ -1,6 +1,8 @@
 import streamlit as st
 st.header("Appendix")
 
+st.divider()
+
 # Attribute descriptions for each dataset
 st.subheader("Attribute List Descriptions for Each Dataset")
 
@@ -59,3 +61,36 @@ st.markdown(
     - `user_ratings_count`: Number of user ratings
     """
 )
+
+st.divider()
+
+# Some additional sources to provide integrity to some ideas
+st.subheader("Additional Sources")
+
+st.write(
+    """
+    [1] [Meet ConcernedApe: The Master Behind Stardew Valley and Beyond - thinglabs](https://thinglabs.io/meet-concernedape-the-master-behind-stardew-valley-and-beyond)
+
+    [2] [2012 Video Game Awards Winners (collider.com)](https://collider.com/2012-video-game-awards-winners-announced-the-walking-dead-named-game-of-the-year-halo-4-wins-best-xbox-game/)
+
+    [3] [Why Are RPGs Popular? A Stunning World Awaits | by TJ | Medium](https://nitemare121.medium.com/why-are-rpgs-popular-a-stunning-world-awaits-3f629adfa1b)
+
+    [4] [Infographic: Indie game revenues on Steam | Video Game Insights](https://vginsights.com/insights/article/infographic-indie-game-revenues-on-steam)
+
+    [5] [It's time for MetaCritic to stand up to review-bombings | GamesRadar+](https://www.gamesradar.com/its-time-for-metacritic-to-stand-up-to-review-bombings/)
+
+    [6] [The Evolution of Gaming: From Traditional Consoles to the Rise of Online Platforms - PlayStation Universe](https://www.psu.com/news/the-evolution-of-gaming-from-traditional-consoles-to-the-rise-of-online-platforms/)
+
+    [7] [The Rise of Indie Games: How Small Studios Are Making Big Waves | by TechGamer Nexus | Medium](https://medium.com/@techgamernexus/the-rise-of-indie-games-how-small-studios-are-making-big-waves-46f6c495bf42#:~:text=The%20indie%20game%20revolution%20began%20in%20earnest%20in,traditional%20gatekeepers%20and%20reach%20a%20global%20audience%20directly.)
+
+    [8] [GDC Vault - The Making of 'Divinity: Original Sin 2'](https://gdcvault.com/play/1026452/The-Making-of-Divinity-Original)
+
+    [9] [The Best Metroidvania Games Ever | Den of Geek](https://www.denofgeek.com/games/the-best-metroidvania-games-ever/)
+
+    [10] [Best Metroidvania games to explore to absolute completion | GamesRadar+](https://www.gamesradar.com/best-metroidvania-games/)
+    """
+)
+
+st.divider()
+
+st.write("This site is open source, to view the source code please visit [GitHub](https://github.com/DVDMVN/GMDT_PROJ).")
