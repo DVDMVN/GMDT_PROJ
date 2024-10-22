@@ -71,8 +71,7 @@ st.write(
     - **Review Score**: Review scores were standardized to use a 100 point scale (0 - 100)
     - **Pricing**: Prices were standardized to utilize floating point format (999 -> 9.99)
     - **List Data**: Many of the features within our datasets have value which are string literals of lists and dictionaries. We reformatted these to their original form
-    where neccessary
-    - 
+    where neccessary.
     """
 )
 

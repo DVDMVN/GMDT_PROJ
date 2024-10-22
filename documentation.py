@@ -88,6 +88,10 @@ st.write(
     [9] [The Best Metroidvania Games Ever | Den of Geek](https://www.denofgeek.com/games/the-best-metroidvania-games-ever/)
 
     [10] [Best Metroidvania games to explore to absolute completion | GamesRadar+](https://www.gamesradar.com/best-metroidvania-games/)
+
+    [11] [EA’s Staggered Release Experiment | Video Game Law](https://videogamelaw.allard.ubc.ca/2019/09/11/eas-staggered-release-experiment/)
+
+    [12] [Strategically Timing Your Game Release – Sibs Video Game Consulting](https://sibs.llc/strategically-timing-your-game-release/)
     """
 )
 

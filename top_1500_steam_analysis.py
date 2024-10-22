@@ -1315,7 +1315,9 @@ with st.container():
         st.write(
             """
             There seems to be no clear advantage for releasing a game in a certain month / season.
-            - 🌟This could suggest that the demand for games is mostly steady throughout the year🌟.
+            - This could suggest that the demand for games is mostly steady throughout the year.
+            - This also could be indicative of game industry artificial "staggered" release schedules [[11](https://videogamelaw.allard.ubc.ca/2019/09/11/eas-staggered-release-experiment/)][[12](https://sibs.llc/strategically-timing-your-game-release/)]. 
+            Game companies tend to try to avoid releasing major titles around the timing of other companies to avoid overlapping hype and direct comparisons.
             """
         )
 

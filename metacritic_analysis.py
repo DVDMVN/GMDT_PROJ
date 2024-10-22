@@ -67,7 +67,7 @@ st.write(
 st.markdown("""
 1. [Features of Interest](#features-of-interest)
     * A preface on the unique features for this particular dataset.
-2. [Feature Explorations](#feature-explorations)
+2. [Feature Exploration](#feature-exploration)
     * The exploration journey used to uncover key insights. Jumping to our dashboard is an option, but we _encourage_ a review of our exploration to really grasp understanding
     of our findings.
     * Because this dataset has only one key feature we focus on, we are not branching at this time.
@@ -690,8 +690,6 @@ st.write(
 )
 
 # ------------------------------------
-
-st.markdown("[Explore other branches](#branch-exploration)")
 
 st.subheader("Key Insights", divider=True)
 
