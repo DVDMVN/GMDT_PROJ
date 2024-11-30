@@ -931,7 +931,6 @@ with st.container():
             **🌟Achievable Success🌟**
             """
         )
-
         def plot_frequency_of_games_with_binned_total_review_counts() -> plt.Figure:
             fig = plt.figure(figsize=(15, 6))
 

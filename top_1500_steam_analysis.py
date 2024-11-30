@@ -1121,7 +1121,11 @@ with st.container():
             """
         )
 
-        def dashboard_plot_publisher_class_revenues(use_median: bool = False, show_fliers: bool = True) -> go.Figure:
+        @st.fragment()
+        def dashboard_plot_publisher_class_revenues(use_median: bool = False, show_fliers: bool = False) -> go.Figure:
+            dashboard_use_median_for_publisher_class_revenues = st.toggle("Use median revenue instead of mean")
+            use_median = dashboard_use_median_for_publisher_class_revenues
+
             fig = make_subplots(
                 rows=1,
                 cols=2,
@@ -1183,15 +1187,9 @@ with st.container():
             fig.update_xaxes(title_text="Publisher class", row=1, col=2)
             fig.update_yaxes(title_text="Average revenue" if not use_median else "Median revenue", row=1, col=2)
 
-            return fig
-        
-        dashboard_use_median_for_publisher_class_revenues = st.toggle("Use median revenue instead of mean")
-        st.plotly_chart(
-            dashboard_plot_publisher_class_revenues(
-                use_median=dashboard_use_median_for_publisher_class_revenues,
-                show_fliers=False,
-            )
-        )
+            st.plotly_chart(fig)
+        dashboard_plot_publisher_class_revenues()
+
         st.write(
             """
             Publishing with a large company yields better average results
