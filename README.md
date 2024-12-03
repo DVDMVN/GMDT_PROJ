@@ -31,6 +31,7 @@ Initial IDA and EDA as well as cleaning and preprocessing was largely performed 
 
 The 'data' folder is used to hold our preprocessed data. You may download and load the raw datasets according to cells in the 'cleaning.ipynb' file.
 - We also hold the 'unprocessed' versions, of the data. This data is at the in between stage of preprocessing and postprocessing, standardized but not cleaned. Used in the 'about.py' file for demonstrations in cleaning.
+- A special case, we also hold the 'engineered' version of the 'steam_reviews' data. Due to the size and nature of the dataset, performing feature engineering takes a considerable amount of time, even in low proportions. Holding the already feature engineered version saves on execution times.
 
 **Streamlit Application**:
 
@@ -47,6 +48,8 @@ This streamlit application is split into different files, representative of thei
   - Analysis of key features within the 'all_55000_steam.csv' data file.
 - metacritic_analysis.py
   - Analysis of key features within the 'metacritic.csv' data file.
+- steam_reviews_analysis.py
+  - Analysis of key features within the 'steam_reviews.csv' data file.
 - documentation.py
   - An appendix.
 
