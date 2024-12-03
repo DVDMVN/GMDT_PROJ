@@ -1,5 +1,6 @@
 # the data folder
 raw_data/
+DVDMAN_ARCHIVE.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -4,7 +4,7 @@ import seaborn as sns
 import pandas as pd
 from utils import load_datasets
 data = load_datasets()
-top_1500_steam, all_55000_steam, metacritic = data['top_1500_steam'], data['all_55000_steam'], data['metacritic']
+top_1500_steam, all_55000_steam, metacritic, steam_reviews = data['top_1500_steam'], data['all_55000_steam'], data['metacritic'], data['steam_reviews']
 
 st.title("About the Data")
 
@@ -24,6 +24,7 @@ st.write(
     - [Top 1500 games on steam by revenue 09-09-2024 (kaggle.com)](https://www.kaggle.com/datasets/alicemtopcu/top-1500-games-on-steam-by-revenue-09-09-2024)
     - [All 55000 Games on Steam November 2022](https://www.kaggle.com/datasets/tristan581/all-55000-games-on-steam-november-2022)
     - [Metacritic Reviews 1995 - 2024](https://www.kaggle.com/datasets/beridzeg45/video-games)
+    - [Steam Reviews 2021](https://www.kaggle.com/datasets/najzeko/steam-reviews-2021)
     """
 )
 
@@ -31,14 +32,20 @@ st.write(
 st.subheader("Dataset Previews", divider=True)
 
 # Display the first few rows of each dataframe
-st.write("##### Top 1500 Steam Games Dataset")
-st.dataframe(top_1500_steam.head())
+top_1500_tab, all_55000_tab, metacritic_tab, steam_reviews_tab = st.tabs(["Top 1500 Steam Games", "All 55,000 Steam Games", "Metacritic Reviews", "Steam Reviews"])
 
-st.write("##### All 55,000 Steam Games Dataset")
-st.dataframe(all_55000_steam.head())
-
-st.write("##### Metacritic Reviews Dataset")
-st.dataframe(metacritic.head())
+with top_1500_tab:
+    st.write("##### Top 1500 Steam Games Dataset")
+    st.dataframe(top_1500_steam.head())
+with all_55000_tab:
+    st.write("##### All 55,000 Steam Games Dataset")
+    st.dataframe(all_55000_steam.head())
+with metacritic_tab:
+    st.write("##### Metacritic Reviews Dataset")
+    st.dataframe(metacritic.head())
+with steam_reviews_tab:
+    st.write("##### Steam Reviews Dataset")
+    st.dataframe(steam_reviews.head())
 
 # Display basic statistics and shapes
 st.subheader("Basic Statistics and Shapes of the Datasets")
@@ -57,6 +64,7 @@ def show_basic_statistics(df, title):
 show_basic_statistics(top_1500_steam, "Top 1500 Steam Games Dataset")
 show_basic_statistics(all_55000_steam, "All 55,000 Steam Games Dataset")
 show_basic_statistics(metacritic, "Metacritic Reviews Dataset")
+show_basic_statistics(steam_reviews, "Steam Reviews Dataset")
 
 # STANDARDIZATION
 st.header("Data Cleaning and Preprocessing")
@@ -76,11 +84,12 @@ st.write(
 )
 
 # MISSING DATA ANALYSIS
-st.subheader("Missing Data Analysis")
+st.subheader("Missing Data Analysis", divider=True)
 
 pre_top_1500_steam = pd.read_csv("data/pre_top_1500_steam.csv")
 pre_all_55000_steam = pd.read_csv("data/pre_all_55000_steam.csv")
 pre_metacritic = pd.read_csv("data/pre_metacritic.csv")
+pre_steam_reviews = pd.read_csv("data/pre_steam_reviews.csv")
 
 st.write(
     """
@@ -91,28 +100,35 @@ st.write(
 pre_top_1500_steam_nulls = pd.DataFrame({'Null Counts': pre_top_1500_steam.isnull().sum()})
 pre_all_55000_steam_nulls = pd.DataFrame({'Null Counts': pre_all_55000_steam.isnull().sum()})
 pre_metacritic_nulls = pd.DataFrame({'Null Counts': pre_metacritic.isnull().sum()})
+pre_steam_reviews_nulls = pd.DataFrame({'Null Counts': pre_steam_reviews.isnull().sum()})
 
 top_1500_steam_nulls = pd.DataFrame({'Null Counts': top_1500_steam.isnull().sum()})
 all_55000_steam_nulls = pd.DataFrame({'Null Counts': all_55000_steam.isnull().sum()})
 metacritic_nulls = pd.DataFrame({'Null Counts': metacritic.isnull().sum()})
+steam_reviews_nulls = pd.DataFrame({'Null Counts': steam_reviews.isnull().sum()})
 
 tab1, tab2 = st.tabs(['Unprocessed', 'Postprocessing'])
 with tab1:
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3= st.columns(3)
     with col1:
         st.write("Top 1500 Steam Games Missing Values Count")
         st.dataframe(pre_top_1500_steam_nulls)
+        st.write("Steam Reviews Missing Values Count")
+        st.dataframe(pre_steam_reviews_nulls)
     with col2:
         st.write("All 55000 Steam Games Missing Values Count")
         st.dataframe(pre_all_55000_steam_nulls)
     with col3:
         st.write("Metacritic Reviews Missing Values Count")
         st.dataframe(pre_metacritic_nulls)
+        
 with tab2:
     col1, col2, col3 = st.columns(3)
     with col1:
         st.write("Top 1500 Steam Games Missing Values Count")
         st.dataframe(top_1500_steam_nulls)
+        st.write("Steam Reviews Missing Values Count")
+        st.dataframe(steam_reviews_nulls)
     with col2:
         st.write("All 55000 Steam Games Missing Values Count")
         st.dataframe(all_55000_steam_nulls)
@@ -126,6 +142,7 @@ st.write(
     - Within top_1500_steam we have very few missing values, only 1 or 2 for publishers and developers.
     - Within all_55000_steam we have missing values for many different features: short_description, developer, publisher, genre, tags, categories, languages, release_date, and website
     - Within metacritic we have a large proportion of missing values, as well as missing values for almost every feature across the board.
+    - Within steam_reviews we have a small proportion of missing values in only two features, "review" and "author_playtime_at_review". Only a couple hundred out of hundreds of thousands.
 
     To determine how best to handle our missing data, we must performed extensive analysis. Within this
     next section, we showcase our exploration into the missingness, and handling of our missing data. Though you may skip this section and simply
@@ -133,7 +150,9 @@ st.write(
     """
 )
 
-top_missing_tab, all_missing_tab, meta_missing_tab = st.tabs(["Top 1500 Steam Handling", "All 55000 Steam Handling", "Metacritic Handling"])
+st.subheader("Individual Missingness Handling", divider=True)
+
+top_missing_tab, all_missing_tab, meta_missing_tab, steam_reviews_tab = st.tabs(["Top 1500 Steam Handling", "All 55000 Steam Handling", "Metacritic Handling", "Steam Reviews Handling"])
 
 with top_missing_tab:
     st.write("With the top 1500 Steam games dataset, since we have only a few missing values we can simply examine every row:")
@@ -416,8 +435,219 @@ metacritic = metacritic.dropna(subset=['name']) # Dropping observations only whe
     # - Imputing missing values in numerical columns using median imputation.
     # - Keeping rows with missing values in certain categorical features to avoid losing potentially valuable information.
 
+with steam_reviews_tab:
+    st.write(
+        """
+        For our steam reviews dataset, we have a very low proportion of missing data in two categorical features "review" and 
+        "author_playtime_at_review". Given the datatype of review being text data, it would be inappropriate to impute using numerical methods 
+        (stochastic regression / SMOTE), and common categorical imputation methods like "by mode" or a modified kmeans make little sense. 
+        The text of each review is likely to be very unique in content, dependent on the game reviewed and the author writing it.
+        """
+    )
 
-st.header("Joining Datasets")
+    def plot_heatmaps_for_missingness_analysis_of_steam_reviews() -> plt.Figure:
+        fig, axes = plt.subplots(1, 2, figsize=(15, 8), gridspec_kw={'width_ratios': [1.5, 1]})
+
+        missing_data_indices = pre_steam_reviews[['review', 'author_playtime_at_review']].isnull().any(axis=1)
+        filtered_df = pre_steam_reviews.loc[missing_data_indices, ['review', 'author_playtime_at_review']]
+        filtered_df.reset_index(inplace=True, drop=True)
+
+        sns.heatmap(filtered_df.isnull().T, cbar=False, cmap='viridis', ax=axes[0])
+        axes[0].set_title('Heatmap of missing values for observations with missing values')
+
+        missing_corr = filtered_df.isnull().corr()
+        sns.heatmap(missing_corr, annot=True, cmap='coolwarm', vmin=-1, vmax=1, square=True, ax=axes[1])
+        axes[1].set_title('Correlations in missing values')
+
+        return fig
+    
+    st.pyplot(plot_heatmaps_for_missingness_analysis_of_steam_reviews())
+
+
+    st.write(
+        """
+        Here we are drawing two heatmaps, one analyzing the feature missingness distribution against the observation indices, one analyzing feature missingness correlations, whether one feature being missing correlates to another also being missing.
+
+        Filtering and plotting by null values of "review" and "author_playtime_at_review" reveals suprisingly that these two have missingness that seems to be negatively related. Specifically, wherever "review" is missing, "author_playtime_at_review" is not missing", and vice versa. This suggests a systematic relationship in the way these data points are missing.
+
+        We can only postulate on why this relationship exists:
+        - Perhaps the data collection process had some anomalies, for some observations it simply only recorded one of the two.
+        - Perhaps some of the data was anomalous. Many things could go wrong with the data, for example a user who left a review perhaps later refunded their copy of the game. This might cause playtime to be missing. 
+        - Users also might be leaving blank reviews, only recording whether they recommend the game or not.
+
+
+        For our analysis, we will assume that missing reviews are legitimate reviews, but with no text data. In this situation, a user leaves a review only leaving their recommendation and playtime.
+        - We will not make the same assumption for the author playtime missingness. Instead, we will utilize stochastic regression with our most reasonable correlators as features.
+            - This is definitely overkill for our use case, however we would like to showcase some technical knowledge of advanced numerical imputation methods.   
+        """
+    )
+
+    def plot_correlations_between_author_playtime_and_numerical_features() -> plt.Figure:
+        steam_reviews['review_text_length'] = steam_reviews['review'].apply(lambda x: len(x)) # Feature engineering review text length to see if we can observe any connection between length and our target
+        plt.figure(figsize=(12,8))
+        correlators = steam_reviews.select_dtypes("number").drop(["app_id", "review_id", "author_steamid"], axis=1)
+        sns.heatmap(
+            correlators.corr()[['author_playtime_at_review']].T,
+            annot=True,
+            cmap="coolwarm",
+            vmin=-1,
+            vmax=1,
+            square=True,
+            cbar=False
+        )
+        plt.xticks(rotation=45)
+        plt.yticks(rotation=0)
+        plt.title("Correlations between author_playtime_at_review and numerical features")
+        return plt.gcf()
+    _ = plot_correlations_between_author_playtime_and_numerical_features()
+
+    st.write(
+        """
+        From a truncated correlation heatmap, we can observe very few great correlators. For our regression model, we 
+        utilize only the top 2 correlators: "author_playtime_forever" and "author_playtime_last_two_weeks".
+        
+        From here, we trained a linear regression model on these two correlators, using an 80% train test split, then calculated our fitting metrics of mean absolute
+        error and mean squared error.
+        """
+    )
+
+    with st.expander("Reveal code block"):
+        code = '''
+            steam_reviews_not_missing = steam_reviews[steam_reviews['author_playtime_at_review'].notnull()]
+            steam_reviews_with_missing = steam_reviews[steam_reviews['author_playtime_at_review'].isnull()]
+            predictors = ['author_playtime_forever', 'author_playtime_last_two_weeks']
+            target = 'author_playtime_at_review'
+
+            def create_and_validate_linear_regression_model(data: pd.DataFrame, predictors: list[str], target: str, handle_outliers: bool) -> list[LinearRegression, list[float]]:
+                X = data[predictors] # Design
+                y = data[target] # Target
+
+                X_train, X_test, y_train, y_test = train_test_split(
+                    X, y, test_size=0.2, random_state=1
+                )
+
+                # Perform outlier handling
+                if handle_outliers:
+                    train_data = pd.concat([X_train, y_train], axis=1)
+                    z_scores = np.abs(zscore(train_data))
+
+                    # Filter out the outliers by zscore with an absolute threshold of 3
+                    threshold = 3
+                    train_data_filtered = train_data[(z_scores < threshold).all(axis=1)]
+                    
+                    X_train = train_data_filtered[predictors]
+                    y_train = train_data_filtered[target]
+
+                model = LinearRegression()
+                model.fit(X_train, y_train)
+
+                # Validation
+                y_pred = model.predict(X_test)
+                mae = mean_absolute_error(y_test, y_pred)
+                mse = mean_squared_error(y_test, y_pred)
+                print(f"Mean absolute error: {mae}")
+                print(f"Mean squared error: {mse}")
+                
+                # Quick check against a mean baseline model
+                mean_baseline = y_train.mean()
+                y_baseline_pred = np.full_like(y_test, fill_value=mean_baseline)
+                baseline_mae = mean_absolute_error(y_test, y_baseline_pred)
+                baseline_mse = mean_squared_error(y_test, y_baseline_pred)
+                print(f"Baseline (impute by mean) mean absolute error: {baseline_mae}")
+                print(f"Baseline (impute by mean) mean squared error: {baseline_mse}")
+
+                training_residuals = y_train - model.predict(X_train) # Used later for magnitude of stochastic noise
+                return model, training_residuals
+
+            _, _ = create_and_validate_linear_regression_model(
+                steam_reviews_not_missing, predictors, target, False
+            )
+        '''
+        st.code(code, language='python')
+    
+    st.write(
+        """
+        - Further testing reveals that adding more correlators only serves to reduce our accuracy in terms of mean squared error and mean absolute error. Sticking to our top 2 gives us our best results.
+        
+        Our results are as follows:
+        """
+    )
+
+    st.markdown(
+        """
+        - `Mean absolute error: 4615.606251597345`
+        - `Mean squared error: 191888428.36573023`
+        - `Baseline (impute by mean) mean absolute error: 11340.927833778102`
+        - `Baseline (impute by mean) mean squared error: 716729755.876812`
+        """
+    )
+    st.write(
+        """
+        Even with our best predictors, we come up quite short in the accuracy department. From our basic statistical analysis, we can 
+        notice that all numerical values regarding playtime are highly skewed to the right. Our results may be thrown by the presence of extreme 
+        outliers. For this reason, we run the same test again, but first filtering for outliers in our training data.
+        - By only filtering for outliers in our training data, we avoid overly optimistic performances. Outliers, after all, are legitimate and valid data 
+        points. The actual missing data values are likely to have variability that is closer to the actual data before filtering.
+        """
+    )
+
+    st.markdown(
+        """
+        - `Mean absolute error: 4616.919491273922`
+        - `Mean squared error: 195409099.31966552`
+        - `Baseline (impute by mean) mean absolute error: 9872.670436856642`
+        - `Baseline (impute by mean) mean squared error: 724954230.9760497`
+        """
+    )
+
+    st.write(
+        """
+        Even after accounting for outliers (absolute z-score > 3) we find that our mean squared error does not improve at all. 
+        Evidently, our author playtime data may be too spread to generalize accurately with linear models. Comparing the performance of our 
+        model against a simple baseline metric such as imputing just by mean shows that we at least manage to beat the baseline by a good margin.
+
+        For this reason, we continue with our more accurate method, now adding the "stochastic" part in, 
+        reintroducing variation into our predictions to impute with variation.
+        """
+    )
+
+    with st.expander("Reveal code block"):
+        code = '''
+        # Adds normally distributed noise into a set of values
+        def add_stochastic_noise(predictions, std_deviation):
+            noise = np.random.normal(0, std_deviation, size=predictions.shape)
+            return np.abs(predictions + noise)
+
+        # Predictions
+        y_missing_pred = model.predict(steam_reviews_with_missing[predictors])
+        y_missing_pred_stochastic = add_stochastic_noise(y_missing_pred, residuals.std())
+
+        # Impute
+        steam_reviews.loc[steam_reviews_with_missing.index, 'author_playtime_at_review'] = y_missing_pred_stochastic
+        '''
+        st.code(code, language='python')
+
+    st.write("After imputation, we examine the effect imputation has on our numerical statistics for our target.")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.dataframe(pre_steam_reviews.describe()[['author_playtime_at_review']])
+    with col2:
+        st.dataframe(steam_reviews.describe()[['author_playtime_at_review']])
+
+    st.write("We see that we have very little change, which informs us in how much integrity we keep.")
+
+st.divider()
+
+st.write("""
+    Some general notes and caveats:
+    - Due to the data type of our missing data being categorical, certain methods for handling missing values, such as stochastic regression or SMOTE, are unapplicable. 
+    Our categorical values are very unique to each observation, and we cannot reasonably impute them using values from other observations.
+    - Furthermore, simple approaches to categorical missingness handling, such as imputing by mode, would only serve to damage the integrity of our analysis.
+         - Features such as "publisher" and "developer" are key in our analysis. Imputing by frequency would ruin the integrity of the true uniqueness of these values.
+""")
+
+st.header("Joining Datasets", divider=True)
 
 st.write(
     """

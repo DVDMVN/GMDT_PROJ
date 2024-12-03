@@ -21,10 +21,13 @@ def load_datasets() -> dict[str: pd.DataFrame]:
     top_1500_steam = pd.read_csv("data/top_1500_steam.csv")
     all_55000_steam = pd.read_csv("data/all_55000_steam.csv")
     metacritic = pd.read_csv("data/metacritic.csv")
+    steam_reviews = pd.read_csv("data/steam_reviews.csv")
+    steam_reviews['review'] = steam_reviews['review'].fillna("")
     return {
         'top_1500_steam': top_1500_steam,
         'all_55000_steam': all_55000_steam,
-        'metacritic': metacritic
+        'metacritic': metacritic,
+        'steam_reviews': steam_reviews,
     }
 
 @st.cache_data
