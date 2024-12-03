@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from itertools import chain
+import nltk
 from nltk import ngrams
 from nltk.probability import FreqDist
 import networkx as nx
@@ -21,6 +22,11 @@ from plotly.subplots import make_subplots
 from utils import load_steam_reviews
 steam_reviews = load_steam_reviews()
 plt.style.use('ggplot')
+
+nltk.download('gutenberg')
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
 
 st.header("💬Exploring Steam Reviews💬")
 
