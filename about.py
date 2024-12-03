@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+
 from utils import load_datasets
 data = load_datasets()
 top_1500_steam, all_55000_steam, metacritic, steam_reviews = data['top_1500_steam'], data['all_55000_steam'], data['metacritic'], data['steam_reviews']

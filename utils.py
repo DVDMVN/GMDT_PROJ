@@ -44,10 +44,17 @@ def load_metacritic() -> pd.DataFrame:
     return pd.read_csv("data/metacritic.csv")
 
 @st.cache_data
-def load_steam_reviews(engineered: bool = True) -> pd.DataFrame:
+def load_steam_reviews(engineered: bool = True, sample: bool = True, sample_size: int = 10000, even_recommended: bool = True) -> pd.DataFrame:
     if engineered:
         steam_reviews = pd.read_csv("data/engineered_steam_reviews.csv")
-        steam_reviews['review'] = steam_reviews['review'].fillna("")
+        if sample and even_recommended:
+            true_recommend = steam_reviews[steam_reviews['recommended'] == True]
+            false_recommend = steam_reviews[steam_reviews['recommended'] == False]
+            true_sample = true_recommend.sample(n=sample_size)
+            false_sample = false_recommend.sample(n=sample_size)
+            steam_reviews = pd.concat([true_sample, false_sample]).sample(frac=1) # Shuffle
+        elif sample:
+            steam_reviews = steam_reviews.sample(n=sample_size)
         steam_reviews['review'] = steam_reviews['review'].fillna("")
         steam_reviews['clean_review'] = steam_reviews['clean_review'].fillna("")
         steam_reviews['clean_tokenized_review'] = steam_reviews['clean_tokenized_review'].apply(literal_evaluate)
@@ -55,6 +62,14 @@ def load_steam_reviews(engineered: bool = True) -> pd.DataFrame:
         return steam_reviews
     else:
         steam_reviews = pd.read_csv("data/steam_reviews.csv")
+        if sample and even_recommended:
+            true_recommend = steam_reviews[steam_reviews['recommended'] == True]
+            false_recommend = steam_reviews[steam_reviews['recommended'] == False]
+            true_sample = true_recommend.sample(n=sample_size)
+            false_sample = false_recommend.sample(n=sample_size)
+            steam_reviews = pd.concat([true_sample, false_sample]).sample(frac=1) # Shuffle
+        elif sample:
+            steam_reviews = steam_reviews.sample(n=sample_size)
         steam_reviews['review'] = steam_reviews['review'].fillna("")
         return steam_reviews
 

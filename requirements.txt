@@ -6,3 +6,6 @@ matplotlib
 seaborn
 IPython
 plotly
+nltk
+networkx
+wordcloud
