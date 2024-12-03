@@ -32,7 +32,7 @@ def perform_feature_engineering():
     top_1500_steam['review_score_category'] = pd.cut(top_1500_steam['review_score'], bins=bins, labels=labels)
 perform_feature_engineering()
 
-st.header("🏆Exploring the Top Steam Games🏆")
+st.header("🏆Exploring Top Steam Games🏆")
 
 st.write(
     """
@@ -1327,7 +1327,10 @@ with st.container():
             """
         )
 
-        def dashboard_plot_review_score_double_regression(regression_split_metric: int = 15) -> go.Figure:
+        @st.fragment()
+        def dashboard_plot_review_score_double_regression():
+            regression_split_metric = st.slider("Review score to split regression on", 10, 90, value=15)
+
             sorted_by_revenue = top_1500_steam.sort_values(by="revenue", ascending=False)
             selection_revenue = sorted_by_revenue.iloc[100:].reset_index()
 
@@ -1391,9 +1394,11 @@ with st.container():
                 legend=dict(x=.8, y=1, bgcolor='rgba(255,255,255,0.3)')
             )
 
-            return fig    
-        dashboard_review_score_slider = st.slider("Review score to split regression on", 10, 90)
-        st.plotly_chart(dashboard_plot_review_score_double_regression(dashboard_review_score_slider))
+            # return fig
+            st.plotly_chart(fig)
+            
+        dashboard_plot_review_score_double_regression()
+        
 
         st.write(
             """

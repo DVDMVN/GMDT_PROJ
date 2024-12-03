@@ -713,9 +713,10 @@ with st.container():
             """
         )
 
-        at_least_n_reviews = st.slider("Set a number of reviews threshold:", min_value=0, max_value=1000, value=20)
-
-        def plot_most_critically_acclaimed_pc_games(at_least_n_reviews):
+        
+        @st.fragment()
+        def plot_most_critically_acclaimed_pc_games():
+            at_least_n_reviews = st.slider("Set a number of reviews threshold:", min_value=0, max_value=50, value=20)
             pc_games = metacritic[metacritic['platform_name'] == 'PC']
             critically_acclaimed_pc_games = pc_games[pc_games['platform_metascore_count'] > at_least_n_reviews]
             critically_acclaimed_pc_games = critically_acclaimed_pc_games.sort_values(by='platform_metascore', ascending=False)
@@ -751,9 +752,8 @@ with st.container():
                 height=600,
                 width=900
             )
-            return fig
-
-        st.plotly_chart(plot_most_critically_acclaimed_pc_games(at_least_n_reviews))
+            st.plotly_chart(fig)
+        plot_most_critically_acclaimed_pc_games()
 
         st.write(
             """
@@ -770,9 +770,10 @@ with st.container():
             """
         )
 
-        plot_with_tail = st.toggle("Plot bottom instead of top")
-        n = st.slider("Set a frequency threshold:", min_value=0, max_value=1000, value=0)
-        def plot_top_and_bottom_rated_genres_and_frequencies(n=0, tail = False):
+        @st.fragment()
+        def plot_top_and_bottom_rated_genres_and_frequencies():
+            tail = st.toggle("Plot bottom instead of top")
+            n = st.slider("Set a frequency threshold:", min_value=0, max_value=1000, value=0)
             genre_frequencies = metacritic['genres'].value_counts()
             genre_frequencies_df = pd.DataFrame({
                 'genres': genre_frequencies.index,
@@ -840,9 +841,9 @@ with st.container():
             if tail:
                 fig.update_layout(title="Bottom rated genres by critics (with frequency)")
 
-            return fig
+            st.plotly_chart(fig)
 
-        st.plotly_chart(plot_top_and_bottom_rated_genres_and_frequencies(n=n, tail=plot_with_tail))
+        plot_top_and_bottom_rated_genres_and_frequencies()
         
         st.write(
             """

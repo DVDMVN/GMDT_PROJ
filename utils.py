@@ -22,7 +22,8 @@ def load_datasets() -> dict[str: pd.DataFrame]:
     all_55000_steam = pd.read_csv("data/all_55000_steam.csv")
     metacritic = pd.read_csv("data/metacritic.csv")
     steam_reviews = pd.read_csv("data/steam_reviews.csv")
-    steam_reviews['review'] = steam_reviews['review'].fillna("")
+    steam_reviews['review'] = steam_reviews['review'].fillna("") # Because "blanks" are regarded as null when loading in from csv, we need to reenter them as blank
+                                                                 # To prevent confusion. These values are "missing" by default.
     return {
         'top_1500_steam': top_1500_steam,
         'all_55000_steam': all_55000_steam,
@@ -41,6 +42,21 @@ def load_all_55000_steam() -> pd.DataFrame:
 @st.cache_data
 def load_metacritic() -> pd.DataFrame:
     return pd.read_csv("data/metacritic.csv")
+
+@st.cache_data
+def load_steam_reviews(engineered: bool = True) -> pd.DataFrame:
+    if engineered:
+        steam_reviews = pd.read_csv("data/engineered_steam_reviews.csv")
+        steam_reviews['review'] = steam_reviews['review'].fillna("")
+        steam_reviews['review'] = steam_reviews['review'].fillna("")
+        steam_reviews['clean_review'] = steam_reviews['clean_review'].fillna("")
+        steam_reviews['clean_tokenized_review'] = steam_reviews['clean_tokenized_review'].apply(literal_evaluate)
+        steam_reviews['even_cleaner_tokenized_review'] = steam_reviews['even_cleaner_tokenized_review'].apply(literal_evaluate)
+        return steam_reviews
+    else:
+        steam_reviews = pd.read_csv("data/steam_reviews.csv")
+        steam_reviews['review'] = steam_reviews['review'].fillna("")
+        return steam_reviews
 
 def retry(max_retries=3, delay=1, backoff=2, logfile=None, exceptions=(Exception,)):
     def decorator(func):

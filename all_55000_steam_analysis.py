@@ -970,8 +970,9 @@ with st.container():
 
         pick_from_genre_list = ['Massively Multiplayer', 'Early Access', 'Racing', 'Free to Play', 'Strategy', 'RPG', 'Indie', 'Casual', 'Adventure', 'Action']
 
-        picked_genres = st.multiselect("Pick genres to plot:", pick_from_genre_list, default=['Free to Play', 'Indie', 'Strategy'])
-        def plot_genres_of_interest_trends_plotly(genres_of_interest: list[str] = ["Free to Play", "Indie", "Strategy"]) -> go.Figure:
+        @st.fragment()
+        def plot_genres_of_interest_trends_plotly():
+            genres_of_interest = st.multiselect("Pick genres to plot:", pick_from_genre_list, default=['Free to Play', 'Indie', 'Strategy'])
             all_55000_steam_copy = all_55000_steam.copy(deep=True)
             all_55000_steam_copy['genres'] = all_55000_steam_copy['genres'].str.split(', ')
             all_55000_steam_exploded_genres = all_55000_steam_copy.explode('genres')
@@ -1010,8 +1011,8 @@ with st.container():
                 height=600,
             )
             
-            return fig
-        st.plotly_chart(plot_genres_of_interest_trends_plotly(picked_genres))
+            st.plotly_chart(fig)
+        plot_genres_of_interest_trends_plotly()
 
         st.write(
             """
@@ -1029,10 +1030,12 @@ with st.container():
             """
         )
 
-        at_least_n_games = st.slider(
-            "Define popular genre game threshold (at least 'this' many games in genre to be popular):", min_value=300, max_value=1500, value=500, step=25
-        )
-        def dashboard_plot_genre_frequencies_and_success_status(n: int = 500) -> go.Figure:
+        @st.fragment()
+        def dashboard_plot_genre_frequencies_and_success_status():
+            at_least_n_games = st.slider(
+                "Define popular genre game threshold (at least 'this' many games in genre to be popular):", min_value=300, max_value=1500, value=500, step=25
+            )
+            n = at_least_n_games
             genre_group_sizes = all_55000_steam.groupby('genres').size().reset_index(name='genre_count')
             genre_total_reviews = all_55000_steam.groupby('genres')['total_review_count'].median().reset_index(name='average_total_review_count')
             genres_with_at_least_n_games = genre_group_sizes[genre_group_sizes['genre_count'] >= n]['genres'].tolist()
@@ -1101,8 +1104,8 @@ with st.container():
                     y=0.95
                 )
             )
-            return fig
-        st.plotly_chart(dashboard_plot_genre_frequencies_and_success_status(at_least_n_games))
+            st.plotly_chart(fig)
+        dashboard_plot_genre_frequencies_and_success_status()
 
         st.write(
             """

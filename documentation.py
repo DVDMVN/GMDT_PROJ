@@ -3,6 +3,28 @@ st.header("Appendix")
 
 st.divider()
 
+st.write(
+    """
+        Most of our datasets deal with Steam API data, or derivative 3rd party API data. Our ground truths described in our attribute lists come from a combination
+        of inference, Steam API return type documentation, and kaggle author dataset documentation.
+        - The Steam API notorious for its poor documentation. Much of the API is undocumented through their official channels. For this reason, we also utilized 
+        3rd party unofficial documentation for reference in data types and description.
+
+        Original kaggle author documentation pages:
+        - [Top 1500 games on steam by revenue 09-09-2024 (kaggle.com)](https://www.kaggle.com/datasets/alicemtopcu/top-1500-games-on-steam-by-revenue-09-09-2024)
+        - [All 55000 Games on Steam November 2022](https://www.kaggle.com/datasets/tristan581/all-55000-games-on-steam-november-2022)
+        - [Metacritic Reviews 1995 - 2024](https://www.kaggle.com/datasets/beridzeg45/video-games)
+        - [Steam Reviews 2021](https://www.kaggle.com/datasets/najzeko/steam-reviews-2021)
+    
+        Steam API documentation pages:
+        - [Unofficial Documentation for InternalSteamWebAPI](https://github.com/Revadike/InternalSteamWebAPI)
+        - [Unofficial Searchable Documentation for public SteamWebAPI](https://steamapi.xpaw.me/)
+        - [Official Documentation for User Reviews](https://partner.steamgames.com/doc/store/getreviews)
+    """
+)
+
+st.divider()
+
 # Attribute descriptions for each dataset
 st.subheader("Attribute List Descriptions for Each Dataset")
 
@@ -65,7 +87,29 @@ st.write(
 st.write("**Steam Reviews Dataset Attributes**")
 st.write(
     """
-    
+    - `app_id`: The ID of the product as allocated by Steam
+    - `name`: Game title
+    - `review_id`: The ID of the review as allocated by Steam
+    - `language`: The language in which the review was written
+    - `review`: Text content of the review
+    - `timestamp_created`: The date and time when the review was originally posted
+    - `timestamp_updated`: The date and time when the review was last edited
+    - `recommended`: Boolean indicating if the user recommends the game (True) or not (False)
+    - `votes_helpful`: Number of times other users marked the review as helpful
+    - `votes_funny`: Number of times other users marked the review as funny
+    - `weighted_vote_score`: A score reflecting the overall helpfulness of the review, adjusted by Steam in a hidden algorithm
+    - `comment_count`: Number of comments made on the review by other users
+    - `steam_purchase`: Boolean indicating whether the user purchased the game on Steam
+    - `received_for_free`: Boolean indicating whether the user received the game for free
+    - `written_during_early_access`: Boolean indicating whether the review was written while the game was in early access
+    - `author_steamid`: The ID of the author of the review as allocated by Steam
+    - `author_num_games_owned`: Total number of games owned by the review author
+    - `author_num_reviews`: Total number of reviews written by the author
+    - `author_playtime_forever`: Total playtime (in minutes) the author has logged on the game
+    - `author_playtime_last_two_weeks`: Playtime (in minutes) the author has logged in the last two weeks
+    - `author_playtime_at_review`: Playtime (in minutes) the author had at the time of writing the review
+    - `author_last_played`: The timestamp of when the author last played the game
+    - `review_text_length`: The length of the review text, measured in characters or words
     """
 )
 
@@ -99,6 +143,12 @@ st.write(
     [11] [EA’s Staggered Release Experiment | Video Game Law](https://videogamelaw.allard.ubc.ca/2019/09/11/eas-staggered-release-experiment/)
 
     [12] [Strategically Timing Your Game Release – Sibs Video Game Consulting](https://sibs.llc/strategically-timing-your-game-release/)
+
+    [13] [The Curse of Knowledge Phenomenon](https://en.wikipedia.org/wiki/Curse_of_knowledge)
+
+    [14] [Lifting the Curse of Knowledge](https://daedtech.com/lifting-the-curse-of-knowledge/)
+
+    [15] [How Can You Use Lemmatization to Improve Your Text Data?](https://www.linkedin.com/advice/1/how-can-you-use-lemmatization-improve-your-text-data-wmpxe)
     """
 )
 
