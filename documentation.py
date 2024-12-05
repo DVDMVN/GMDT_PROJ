@@ -151,6 +151,8 @@ st.write(
     [15] [How Can You Use Lemmatization to Improve Your Text Data?](https://www.linkedin.com/advice/1/how-can-you-use-lemmatization-improve-your-text-data-wmpxe)
     
     [16] [Feature Importance in XGBoost Models](https://mljourney.com/xgboost-feature-importance-comprehensive-guide/)
+
+    [17] [Is Story Important In Video Games?](https://www.gameskinny.com/culture/is-story-important-in-video-games-it-is-not-that-simple/)
     """
 )
 

@@ -17,7 +17,6 @@ from wordcloud import WordCloud
 import plotly.graph_objects as go
 import plotly.express as px
 import plotly.colors as pc
-from plotly.subplots import make_subplots
 
 from utils import load_steam_reviews
 steam_reviews = load_steam_reviews()
@@ -40,12 +39,11 @@ st.write(
 st.markdown("""
 1. [Features of Interest](#features-of-interest)
     * A preface on the unique features for this particular dataset, and some caveats to watch out for.
-2. [Feature Explorations](#feature-explorations)
+2. [User Review Text Analysis](#user-review-text-analysis)
     * The exploration journey used to uncover key insights. Jumping to our dashboard is an option, but we _encourage_ a review of our exploration to really grasp understanding
     of our findings.
-    * This section introduces some basic statistics before branching into tabs for particular feature dives, allowing you to choose specific branches of exploration based on your interests.
 3. [Key Insights](#key-insights)
-    * A comprehensive list of our most important findings, along with some caveats to consider.
+    * A comprehensive list of our most important findings.
 """)
 
 st.subheader("Features of Interest", divider=True)
@@ -269,7 +267,14 @@ st.pyplot(plot_most_common_n_words())
 
 st.write(
     """
-    
+    Here we plot our top 20 most common words:
+    - Certain words like "game" and "play" dominate our most common words. And this is after stopword filtering!
+    - Evidently, even with stopword filtering, we end up with tons of words which we still do not care too much about.
+
+    Probably the most notable word on this list is "story".
+    - A very hotly debated topic in the game development space involves whether "story" / narrative truly is a key aspect in marketability of games [17](https://www.gameskinny.com/culture/is-story-important-in-video-games-it-is-not-that-simple/)
+    - It is interesting to note that story comes up so often! 🌟Story may be a key aspect in games that players most often look for 🌟. We may want to try to qualify this 
+    statement later by looking at how keywords of relate to genre.
     """
 )
 
@@ -293,7 +298,7 @@ def plot_top_n_bigram_frequencies(n = 20) -> plt.Figure:
         y='ngram',
         orient='h'
     )
-    plt.title(f'Top 20 Most Common {n}-grams')
+    plt.title(f'Top 20 most common {n}-grams')
     plt.xlabel('Frequency')
     plt.ylabel(f'{n}-gram')
     return plt.gcf()
@@ -301,7 +306,7 @@ st.pyplot(plot_top_n_bigram_frequencies())
 
 st.write(
     """
-    TODO
+    Looking at the most common bigrams we see most often, reviews associate adjectives with the general word "game". Using a word network graph...
     """
 )
 
@@ -362,7 +367,7 @@ def plot_bigram_word_network() -> plt.Figure:
                 edge_color='gray',
                 alpha=0.7)
 
-        plt.title("Significant Bigram Connections in Steam Reviews")
+        plt.title("Significant bigram connections as a network graph")
         return plt.gcf()
 
     all_tokens = list(chain.from_iterable(steam_reviews['even_cleaner_tokenized_review']))
@@ -376,7 +381,12 @@ st.pyplot(plot_bigram_word_network())
 
 st.write(
     """
-    TODO
+    ... we can visualize these connections in a more intuitive fashion.
+
+    We can notice that our most significant bigrams generally fall into a single cluster around the word "game".
+    - Though we can try to gleam information from these clusters, because of how general this cluster's words are, there are no clear decisive insights to gain.
+
+    From here, we categorize and filter.
     """
 )
 
@@ -503,7 +513,15 @@ st.pyplot(plot_common_words_by_category())
 
 st.write(
     """
-    TODO
+    Here we plot the most common words by "category". We defined lists of known common words for different various common game development topics. See our curated list here.
+    """
+)
+st.write("Categories:", categories)
+
+st.write(
+    """
+    The frequency of the words have large bearing on their relative importance.
+    - Interesting to note, under the performance category, 🌟users discuss 'bugs' much more often than any other performance issues!🌟
     """
 )
 
@@ -551,7 +569,7 @@ def plot_common_words_by_category_stacked() -> plt.Figure:
     category_summary = plot_df.groupby(['Category', 'Recommended'])['Frequency'].sum().unstack()
 
     # Plot stacked horizontal bar plot
-    category_summary.plot(kind='barh', stacked=True, figsize=(12, 8), color=['#1f77b4', '#ff7f0e'])
+    category_summary.plot(kind='barh', stacked=True, figsize=(12, 8))
     plt.title('Keyword Frequency by Category and Recommendation')
     plt.xlabel('Frequency')
     plt.ylabel('Category')
@@ -562,7 +580,10 @@ st.pyplot(plot_common_words_by_category_stacked())
 
 st.write(
     """
-    TODO
+    To qualify the previous graph, we plot the overall frequency by category colored by whether the words are toward or against recommendation.
+
+    We can notice an imbalance. Evidently, most of our keywords in the previous list are used in reviews which do not recommend the game.
+    - Users are more likely to be specific in negative reviews, and be more general in positive reviews!
     """
 )
 
@@ -607,7 +628,9 @@ st.pyplot(plot_word_clouds())
 
 st.write(
     """
-    TODO
+    We can visualize common words using an alternative visualization method: the word cloud. We notice similar commonalities with our previous bar graphs for common words.
+
+    We may want to filter our word cloud to exclude the more uninteresting words. We would like to observe the frequency of words with direct relevance to aspects of the games they describe.
     """
 )
 
@@ -640,11 +663,14 @@ st.pyplot(plot_author_playtime_by_recommendation_distributions())
 
 st.write(
     """
-    TODO
+    To answer whether playtime has bearing on our recommendation, we plot two graphs: A double boxplot and a double kernel density estimate line.
+    - We use log scaling to account for our heavy skew to the right. We do indeed find better results in this scaling, we should however consider this is more exponential.
+
+    From this, we can notice that authors that recommend a game typically have a higher amount of playtime than authors that do not.
+    - Intuitively, this aligns with the notion of, players who enjoy a game would typically play more, and players who do not enjoy a game may quit out earlier. They may not want to continue.
+    - From this we can draw insight: players with a lot to say typically enjoyed the game!
     """
 )
-
-st.markdown("[Explore other branches](#branch-exploration)")
 
 st.subheader("Key Insights", divider=True)
 
@@ -720,69 +746,9 @@ with st.container():
 
         st.write(
             """
-            
-            """
-        )
-    with st.container(border=True):
-        st.write(
-            """
-            **🌟Keyword Associations🌟**
-            """
-        )
-
-        @st.fragment()
-        def dashboard_plot_word_clouds():
-            st.write("Type any additional exclusions as comma separated words!")
-
-            more_exclusions_text = st.text_input("Additional Exclusion List:", value="player, fun, great", help="EX: player, fun, great")
-
-            excluded_words = [
-                "game",
-                "good",
-                "fucking",
-                "shit",
-                "play",
-                "bad",
-                "time",
-                "love",
-                "amazing",
-                "thing",
-                "people",
-                "fuck",
-            ]  # Add more words to exclude as needed, trying to exclude things like swear words from production
-            more_exclusions = [item.strip() for item in more_exclusions_text.split(",")]
-
-            st.write("Current filter:", more_exclusions)
-
-            excluded_words = excluded_words + more_exclusions
-            def filter_tokens(tokens, excluded_words):
-                return [word for word in tokens if word.lower() not in excluded_words]
-
-            steam_reviews['filtered_tokens'] = steam_reviews['even_cleaner_tokenized_review'].apply(lambda tokens: filter_tokens(tokens, excluded_words))
-
-            # Combining for word cloud usage
-            true_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == True]['filtered_tokens']])
-            false_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == False]['filtered_tokens']])
-
-            true_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Greens').generate(true_text)
-            false_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Reds').generate(false_text)
-
-            fig, axes = plt.subplots(1, 2, figsize=(16, 8))
-            axes[0].imshow(true_wordcloud, interpolation='bilinear')
-            axes[0].set_title("WordCloud: Recommended", fontsize=16)
-            axes[0].axis('off')
-            
-            
-            axes[1].imshow(false_wordcloud, interpolation='bilinear')
-            axes[1].set_title("WordCloud: Not Recommended", fontsize=16)
-            axes[1].axis('off')
-            plt.tight_layout()
-            st.pyplot(fig)
-
-        dashboard_plot_word_clouds()
-
-        st.write(
-            """
-            
+            Keywords for positive and negative reviews:
+            - Look out for story and narrative aspects, these keywords are frequent in both good and bad reviews!
+            - Players seem to especially hate bugs and crashes!
+            - Play around with the filter to try and gleam other common user talking points by recommendation.
             """
         )
