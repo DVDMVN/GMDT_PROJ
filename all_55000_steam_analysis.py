@@ -1156,6 +1156,9 @@ st.write(
     """
 )
 
+status_message = "Running Models..."
+
+st.write(status_message)
 # The additional feature_engineering is specifically for the modeling portion of the analysis
 def perform_additional_feature_engineering(all_55000_steam) -> pd.DataFrame:
     # Getting total developer and publisher experiences
@@ -1343,6 +1346,8 @@ feature_importance_xgb = pd.Series(importances_xgb, index=feature_columns).sort_
 # print("XGBoost Feature Importances:")
 # print(feature_importance_xgb.head(10))
 
+status_message = "Model validation complete! ✔️"
+
 st.write(
     """
     Results:
@@ -1387,6 +1392,14 @@ st.table(feature_importance_xgb.head(10))
 
 st.write(
     """
+    XGBoost out performs the rest of the models in terms of variance explained.
+    - Linear Regression performs the worst, suggesting that the relationship between the predictors and the target variable is not strictly linear.
+    - Random Forest improves upon Linear Regression, indicating that non-linear relationships and interactions between features are better captured.
+    - XGBoost further enhances performance by effectively modeling complex patterns through gradient boosting.
+
+    Dominant Feature - 🌟Developer Experience🌟:
+    - Both models highlight "developer_experience" as the most influential feature! Though with XGBoost, we should note caveats in interpretability of important features, 
+    we can underscore that indeed, developer experience has the most significant effect on game success out of the features we tested! [[18](https://arxiv.org/abs/1801.04293))
     """
 )
         

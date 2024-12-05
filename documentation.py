@@ -153,6 +153,8 @@ st.write(
     [16] [Feature Importance in XGBoost Models](https://mljourney.com/xgboost-feature-importance-comprehensive-guide/)
 
     [17] [Is Story Important In Video Games?](https://www.gameskinny.com/culture/is-story-important-in-video-games-it-is-not-that-simple/)
+
+    [18] [Developer Experience and Video Game Success](https://arxiv.org/abs/1801.04293)
     """
 )
 
