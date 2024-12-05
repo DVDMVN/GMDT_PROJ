@@ -173,7 +173,7 @@ st.subheader("User Review Text Analysis", divider=True)
 st.write(
     """
         Within this branch, we want to investigate the following questions:
-        - What does our text data look like?
+        - What does our text data length distributions look like?
         - What are some common reviews words? Can we identify common words that carry meaning?
         - What are the most common complaints in reviews that have a negative recommendation?
         - Does playtime have any bearing on our recommendation? Does playtime have bearing on our review text shape?
@@ -188,13 +188,25 @@ def plot_review_length_distributions() -> plt.Figure:
     sns.histplot(steam_reviews['review_text_length'], kde=True, bins=30, alpha=0.7, ax=axes[0])
     sns.histplot(steam_reviews['review_total_words'], kde=True, bins=30, alpha=0.7, ax=axes[1])
     sns.histplot(steam_reviews['review_total_sentences'], kde=True, bins=30, alpha=0.7, ax=axes[2])
+    axes[0].set_xlabel("Length (by character)")
+    axes[1].set_xlabel("Length (by word)")
+    axes[2].set_xlabel("Length (by sentence)")
 
     return fig
 st.pyplot(plot_review_length_distributions())
 
 st.write(
     """
-    TODO
+    Author text lengths are heavily skewed to the right, with a quick dropoff and long tail distribution. Evidently, most reviews are relatively short.
+    - While the majority of users leave concise feedback, a few provide highly detailed and comprehensive reviews.
+    - Looking at text length distribution can give us insight into common user behavioral patterns.
+
+    Though all three distributions all showcase a similar metric, we can gleam different insight from each:
+    - The distribution of review length by character gives us a very smooth curve. This tells us that our dropoff is rather consistent.
+    - The distribution of review length by words gives us further information, most reviews contain 20 or fewer words, with there being slight peaks and valleys in this distribution.
+    - The distribution of review length by sentence gives us our best metric in terms of conciseness and relatability. Most reviews are one or two sentences.
+    
+    To account for our heavy skew, we can plot only looking at lengths below a certain percentile.
     """
 )
 
@@ -222,12 +234,17 @@ def plot_review_length_distributions_with_threshold(threshold_percentage: float 
     sns.histplot(filtered_sentence_count, discrete=True, alpha=0.7, ax=axes[2])
     axes[2].set_title("Review #sentences distribution (<= 90th percentile))", fontsize=10)
 
+    axes[0].set_xlabel("Length (by character)")
+    axes[1].set_xlabel("Length (by word)")
+    axes[2].set_xlabel("Length (by sentence)")
+
     return fig
 st.pyplot(plot_review_length_distributions_with_threshold())
 
 st.write(
     """
-    TODO
+    With these plots, we can qualify previous insights on the majority of users.
+    - The vast majority of users (90%) leave responses that are quick and concise. Most leave reviews that are as short as 1 or 2 sentences.
     """
 )
 
@@ -252,7 +269,7 @@ st.pyplot(plot_most_common_n_words())
 
 st.write(
     """
-    TODO
+    
     """
 )
 
@@ -643,3 +660,129 @@ with st.container():
         """,
         unsafe_allow_html=True
     )
+    with st.container(border=True):
+        st.write(
+            """
+            **🌟Informative Keyword Frequencies🌟**
+            """
+        )
+
+        @st.fragment()
+        def dashboard_plot_word_clouds():
+            st.write("Type any additional exclusions as comma separated words!")
+
+            more_exclusions_text = st.text_input("Additional Exclusion List:", help="EX: player, fun, great")
+
+            excluded_words = [
+                "game",
+                "good",
+                "fucking",
+                "shit",
+                "play",
+                "bad",
+                "time",
+                "love",
+                "amazing",
+                "thing",
+                "people",
+                "fuck",
+            ]  # Add more words to exclude as needed, trying to exclude things like swear words from production
+            more_exclusions = [item.strip() for item in more_exclusions_text.split(",")]
+
+            st.write("Current filter:", more_exclusions)
+
+            excluded_words = excluded_words + more_exclusions
+            def filter_tokens(tokens, excluded_words):
+                return [word for word in tokens if word.lower() not in excluded_words]
+
+            steam_reviews['filtered_tokens'] = steam_reviews['even_cleaner_tokenized_review'].apply(lambda tokens: filter_tokens(tokens, excluded_words))
+
+            # Combining for word cloud usage
+            true_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == True]['filtered_tokens']])
+            false_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == False]['filtered_tokens']])
+
+            true_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Greens').generate(true_text)
+            false_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Reds').generate(false_text)
+
+            fig, axes = plt.subplots(1, 2, figsize=(16, 8))
+            axes[0].imshow(true_wordcloud, interpolation='bilinear')
+            axes[0].set_title("WordCloud: Recommended", fontsize=16)
+            axes[0].axis('off')
+            
+            
+            axes[1].imshow(false_wordcloud, interpolation='bilinear')
+            axes[1].set_title("WordCloud: Not Recommended", fontsize=16)
+            axes[1].axis('off')
+            plt.tight_layout()
+            st.pyplot(fig)
+
+        dashboard_plot_word_clouds()
+
+        st.write(
+            """
+            
+            """
+        )
+    with st.container(border=True):
+        st.write(
+            """
+            **🌟Keyword Associations🌟**
+            """
+        )
+
+        @st.fragment()
+        def dashboard_plot_word_clouds():
+            st.write("Type any additional exclusions as comma separated words!")
+
+            more_exclusions_text = st.text_input("Additional Exclusion List:", value="player, fun, great", help="EX: player, fun, great")
+
+            excluded_words = [
+                "game",
+                "good",
+                "fucking",
+                "shit",
+                "play",
+                "bad",
+                "time",
+                "love",
+                "amazing",
+                "thing",
+                "people",
+                "fuck",
+            ]  # Add more words to exclude as needed, trying to exclude things like swear words from production
+            more_exclusions = [item.strip() for item in more_exclusions_text.split(",")]
+
+            st.write("Current filter:", more_exclusions)
+
+            excluded_words = excluded_words + more_exclusions
+            def filter_tokens(tokens, excluded_words):
+                return [word for word in tokens if word.lower() not in excluded_words]
+
+            steam_reviews['filtered_tokens'] = steam_reviews['even_cleaner_tokenized_review'].apply(lambda tokens: filter_tokens(tokens, excluded_words))
+
+            # Combining for word cloud usage
+            true_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == True]['filtered_tokens']])
+            false_text = ' '.join([' '.join(tokens) for tokens in steam_reviews[steam_reviews['recommended'] == False]['filtered_tokens']])
+
+            true_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Greens').generate(true_text)
+            false_wordcloud = WordCloud(width=800, height=400, background_color='white', colormap='Reds').generate(false_text)
+
+            fig, axes = plt.subplots(1, 2, figsize=(16, 8))
+            axes[0].imshow(true_wordcloud, interpolation='bilinear')
+            axes[0].set_title("WordCloud: Recommended", fontsize=16)
+            axes[0].axis('off')
+            
+            
+            axes[1].imshow(false_wordcloud, interpolation='bilinear')
+            axes[1].set_title("WordCloud: Not Recommended", fontsize=16)
+            axes[1].axis('off')
+            plt.tight_layout()
+            st.pyplot(fig)
+
+        dashboard_plot_word_clouds()
+
+        st.write(
+            """
+            
+            """
+        )

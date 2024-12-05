@@ -703,11 +703,115 @@ st.write(
     Throughout every dataset, we very frequently utilized created features in our analysis. Having domain knowledge, we are able to postulate reasonable feature combinations for which further our
     analysis and answer more powerful questions. The feature engineering portions take part within the exploration of each branch.
 
-    One common pattern of encoding we utilized was "binning and lumping", transforming continuous or discrete numerical features into categorical groupings.
-    - For example, binning prices of games into types such as "Free to Play" or "Under $10".
+    Some common patterns we used:
+    - "Binning and lumping": transforming continuous or discrete numerical features into categorical groupings.
+        - For example, binning prices of games into types such as "Free to Play" or "Under $10".
+        - Helps us smooth the influence of outliers and relate continuous data to relatable breakpoints. In addition, this
+        also helps cuts the noise of the data down.
+        - The biggest advantage may be in a simpler interpretation, however, facilitating much easier trend analysis and giving more 
+        targeted decision-making.
+    - "Explosion": Taking a list feature and exploding it into binary categorical columns.
+        - For example, taking a list of genres and exploding into separate columns to allow multiple genres per
+        observation.
+        - Used a lot for summing and counting list format categorical data.
+    - "Counting": Grouping by a categorical feature and counting occurances. Lets us convert unruly categorical data into a numerical format.
+        - Sometimes used with explosion, for example counting how many games a certain developer has worked on.
+    
+    By far, binning and lumping was used the most. Outside these common patterns, we often did more unorthodox engineering to cater to very
+    particular questions.
 
-    Binning and lumping helps us smooth the influence of outliers, we can place extreme outliers in outer bins, which reduces their impact on the rest of the data. Our datasets all deal with
-    extreme outliers, this is just one of several methods we utilized to smooth them.
+    Here we list a comprehensive list of our engineered features, by dataset:
+    """
+)
+
+(
+    top_1500_engineering_tab,
+    all_55000_engineering_tab,
+    meta_engineering_tab,
+    steam_reviews_engineering_tab,
+) = st.tabs(
+    [
+        "Top 1500 Steam Engineering",
+        "All 55000 Steam Engineering",
+        "Metacritic Engineering",
+        "Steam Reviews Engineering",
+    ]
+)
+with top_1500_engineering_tab:
+    st.write(
+        """
+        - `price_category`:
+            - Binning `price` to industry standard ranges, allowing for better comparison and clearer decision making.
+        - `release_month`:
+            - Binning `release_date` by month. Helps cut noise by day and give more notice to larger patterns.
+        - `review_score_category`:
+            - Binning `review_score` to Steam terminology. Steam uses category rather than numerical score, binning to this format gives 
+            real world relatability to analysis.
+        """
+    )
+
+with all_55000_engineering_tab:
+    st.write(
+        """
+        - `price_category`:
+            - Binning `price` to industry standard ranges, allowing for better comparison and clearer decision making.
+        - `total_review_count`:
+            - Sum of `positive_reviews` and `negative_reviews`.
+        - `positive_ratio`:
+            - Ratio of `positive_reviews` to `negative_reviews`. A ratio between rather than a ratio from total gives account to games with few reviews.
+        - `total_review_bins`:
+            - Binned `total_review_count` to reduce the skew of the data. Past a certain amount of reviews we care little about the variance.
+        - `release_year`:
+            - Binning `release_date` by year. Helps cut noise by day and give more notice to larger patterns.
+        - `developer_experience` and `publisher_experience`:
+            - Total games developed by the developer(s) or published by the publisher(s).
+        - `[genre]`:
+            - Exploded binary feature representing whether a game is associated with the genre or not. There are 30 different unique exploded genre columns.
+            - Used in machine learning modeling analysis to help answer whether genre has an effect on success.
+        - `[language]`:
+            - Exploded binary feature representing whether a game has support for a particular language. There are over 50 different unique language columns.
+            - Used in machine learning modeling analysis as an accounted confounder. Language may be an enabler for players to
+            become at all interested in a particular game.
+        - `languages_supported`:
+            - A count of the number of languages a game supports.
+            - Used in machine learning modeling analysis as an accounted confounder.
+        """
+    )
+
+with meta_engineering_tab:
+    st.write(
+        """
+        - `platform_name`, `platform_metascore`, `platform_metascore_count`:
+            - Extracting information from the `platforms_info` feature, the name and scores given.
+            - This is crucial information regarding game 'critic' review, allowing for analysis against user review.
+        - `platform_frequency`:
+            - Count on the frequency of the platform relative to the dataset total observation length.
+        """
+    )
+
+with steam_reviews_engineering_tab:
+    st.write(
+        """
+        - `review_text_length`, `review_total_words` and `review_total_sentences`:
+            - Features that quantify length of review in different ways. Having different scales allows for different analysis,
+            smaller scales reveal more granular patterns.
+        - `even_cleaner_tokenized_review`:
+            - After cleaning the `review` text with lowercasing, link removal and alphanumeric filtering (no symbols), we
+            then tokenize and clean further (hence the 'even' cleaner). We follow by expanding contractions, removing stopwords and lemmatizing.
+            - Note: the stopwords list is custom, an advancement from NLTK's library that includes more works like "like" and "really".
+            Here is a [link](https://gist.githubusercontent.com/rg089/35e00abf8941d72d419224cfd5b5925d/raw/12d899b70156fd0041fa9778d657330b024b959c/stopwords.txt). 
+        """
+    )
+
+st.divider()
+
+st.write(
+    """
+        In our analysis pages you may watch out for where these engineered features are used for direct relevance of their
+        usages. For any analysis which use features not listed here, those engineered features can be assumed to be ephemeral, only used once and
+        not saved directly back into the dataframe.
+
+        Please see our codebase for more information on the exact details of the engineering. These details can be found in the individual exploration jupyter notebook files.
     """
 )
 

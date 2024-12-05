@@ -6,7 +6,10 @@ import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.colors as pc
+import re
+
 from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import MultiLabelBinarizer
 
 from utils import load_all_55000_steam
 
@@ -77,6 +80,8 @@ st.markdown("""
     * This section introduces some basic statistics before branching into tabs for particular feature dives, allowing you to choose specific branches of exploration based on your interests.
 3. [Key Insights](#key-insights)
     * A comprehensive list of our most important findings, along with some caveats to consider.
+4. [Modeling](#modeling)
+    * This section attempts to further quality our insights by using machine learning models to predict success.
 """)
 
 st.subheader("Features of Interest", divider=True)
@@ -1115,6 +1120,275 @@ with st.container():
             , or at least the established expectations are easier to reach. There are likely many confounding factors at play which make certain genre more successful on average than others.
             """
         )
+
+st.subheader("Modeling", divider=True)
+
+st.write(
+    """
+    Within the modeling section, we showcase our attempt at training, testing and validating of machine learning models to predict game success. 
+    We are predict values of 'total_review_count' as our metric of success. We will refrain from using trivial correlators like 'positive_reviews' or 'owners' to 
+     ensure integrity of our analysis. Instead we will be using the following features:
+    - `developer_experience`
+    - `publisher_experience`
+    - `genre`
+    - `languages`
+    - `languages_supported`
+
+    With our primary interest being in `developer_experience`, with the rest as features to control their potential confounding effect on the 
+    outcome and predictor.
+    - We want to attempt to shed light on a popular question: "does experience really matter for game development?". Sometimes refered to as "DX" in the industry space, we
+    often see job recruiters place heavy emphasis on prior experience for potential hiring candidates. We would like to quantify its predictive effect.
+
+    To do this, we will be utilizing the following three models:
+    - `LinearRegression`
+    - `RandomForest`
+    - `XGBoost`
+
+    These models were chosen to compare performance at differing orders of complexity and to compare differing methods to capture a best fit.
+    - The multivariate linear regression model is associated heavily with linear relationships. Though we found very few great linear correlators in our
+    correlation heatmap assessment, we will utilize this model to baseline the others. 
+        - Note: Having little linear correlation with the target variable brings into light interpretability issues. Our derived weights for our features lose integrity in telling of
+        the features' true effect.
+    - Though random forest models are often associated with classification tasks, they can generalize to regression tasks as well. Random forest and decision tree models 
+    do a much better job at capturing non-linearity in the data. 
+    - XGBoost, another derivative of decision tree model, utilizes a differing algorithm in tree construction. Due to its sequential "boosting", feature importances are
+    lose integrity, though they may still be extracted [[16](https://mljourney.com/xgboost-feature-importance-comprehensive-guide/)].
+    """
+)
+
+# The additional feature_engineering is specifically for the modeling portion of the analysis
+def perform_additional_feature_engineering(all_55000_steam) -> pd.DataFrame:
+    # Getting total developer and publisher experiences
+    filter_terms = ["Inc", "Inc.", "LLC", "Ltd", "Ltd.", "LTD."] # The list of developers includes lots of filler stuff that throws off our count. Not all "LLC" work on the same games after all.
+    
+    all_55000_steam['developers'] = all_55000_steam['developers'].fillna('').astype(str)
+    all_55000_steam['publishers'] = all_55000_steam['publishers'].fillna('').astype(str)
+
+    def filter_entities(entity_list):
+        return [entity for entity in entity_list if not any(term in entity for term in filter_terms)]
+
+    all_55000_steam['developer_list'] = all_55000_steam['developers'].apply(lambda x: [dev.strip() for dev in x.split(',') if dev.strip()])
+    all_55000_steam['publisher_list'] = all_55000_steam['publishers'].apply(lambda x: [dev.strip() for dev in x.split(',') if dev.strip()])
+
+    all_55000_steam['developer_list'] = all_55000_steam['developer_list'].apply(filter_entities)
+    all_55000_steam['publisher_list'] = all_55000_steam['publisher_list'].apply(filter_entities)
+
+    developer_df = all_55000_steam[['app_id', 'developer_list']].explode('developer_list')
+    publisher_df = all_55000_steam[['app_id', 'publisher_list']].explode('publisher_list')
+
+    developer_counts = developer_df.groupby('developer_list')['app_id'].nunique().reset_index()
+    developer_counts.rename(columns={'app_id': 'developer_experience'}, inplace=True)
+    publisher_counts = publisher_df.groupby('publisher_list')['app_id'].nunique().reset_index()
+    publisher_counts.rename(columns={'app_id': 'publisher_experience'}, inplace=True)
+
+    developer_df = developer_df.merge(developer_counts, on='developer_list', how='left')
+    publisher_df = publisher_df.merge(publisher_counts, on='publisher_list', how='left')
+
+    dev_exp_avg = developer_df.groupby('app_id')['developer_experience'].sum().reset_index()
+    all_55000_steam = all_55000_steam.merge(dev_exp_avg, on='app_id', how='left')
+
+    pub_exp_avg = publisher_df.groupby('app_id')['publisher_experience'].sum().reset_index()
+    all_55000_steam = all_55000_steam.merge(pub_exp_avg, on='app_id', how='left')
+
+    # Exploding genres using a MultiLabelBinarizer
+    all_55000_steam['genres'].fillna("", inplace=True)
+    all_55000_steam['genres_list'] = all_55000_steam['genres'].str.split(', ')
+
+    mlb = MultiLabelBinarizer()
+    genres_encoded = mlb.fit_transform(all_55000_steam['genres_list'])
+
+    genres_df = pd.DataFrame(genres_encoded, columns=mlb.classes_)
+    all_55000_steam = pd.concat([all_55000_steam, genres_df], axis=1)
+    all_55000_steam = all_55000_steam.drop('genres_list', axis=1)
+
+    # Exploding price category using pd.get_dummies
+    price_category_dummies = pd.get_dummies(all_55000_steam['price_category'], prefix='price_category')
+    all_55000_steam = pd.concat([all_55000_steam, price_category_dummies], axis=1)
+
+    all_55000_steam['languages'].fillna("", inplace=True) # if the game doesnt have it listed, then it is simply left blank.
+    possible_languages = ['Afrikaans', 'Albanian', 'Arabic', 'Azerbaijani', 'Bangla', 'Basque', 'Belarusian',
+                        'Bosnian', 'Bulgarian', 'Catalan', 'Croatian', 'Czech', 'Danish', 'Dari', 'Dutch',
+                        'English', 'Estonian', 'Filipino', 'Finnish', 'French', 'Galician', 'Georgian',
+                        'German', 'Greek', 'Hebrew', 'Hindi', 'Hungarian', 'Icelandic', 'Indonesian',
+                        'Irish', 'Italian', 'Japanese', 'Kannada', 'Kazakh', 'Korean', 'Latvian',
+                        'Lithuanian', 'Luxembourgish', 'Macedonian', 'Malay', 'Maori', 'Marathi',
+                        'Mongolian', 'Norwegian', 'Persian', 'Polish', 'Portuguese', 'Portuguese - Brazil',
+                        'Portuguese - Portugal', 'Punjabi (Gurmukhi)', 'Romanian', 'Russian',
+                        'Serbian', 'Simplified Chinese', 'Slovak', 'Slovenian', 'Spanish - Latin America',
+                        'Spanish - Spain', 'Swahili', 'Swedish', 'Tamil', 'Telugu', 'Thai',
+                        'Traditional Chinese', 'Turkish', 'Ukrainian', 'Urdu', 'Uzbek', 'Valencian',
+                        'Vietnamese', 'Welsh'] # List of languages, gotten by manually cleaning unique values of languages
+                                                # Yes.. apparently Portuguese has 3 derivatives that are unique
+                                                # Apparently this is true for a few of these languages. Nice to know!
+
+    # The languages feature is turning out to be really... terrible in format
+    # Tons of random \r\n tags, random BBCode and HTML tags, random parenthesis tags, we need to a ton of cleaning to extract and explode this column.
+    def clean_languages(language_text):
+        if pd.isnull(language_text) or language_text.strip() == '':
+            return []
+        language_text = language_text.replace('\r\n', ',').replace(';', ',')# Replace '\r\n' and ';' with commas
+        language_text = re.sub(r'\[.*?\]', '', language_text) # Remove BBCode or HTML tags like '[b]*[/b]'
+        language_text = language_text.replace('(full audio)', '').replace('Not supported', '') # Remove '(full audio)', 'Not supported'
+        language_text = re.sub(' +', ' ', language_text) # Fix badly spaced language texts
+        language_text = language_text.strip()
+
+        if language_text == '':
+            return []
+        language_list = language_text.split(',') # Finally ready to split
+
+        language_list = [lang.strip() for lang in language_list if lang.strip()]
+        detected_languages = []
+        for lang in language_list:
+            matched = False
+            for possible_lang in possible_languages:
+                if possible_lang.lower() == lang.lower():
+                    detected_languages.append(possible_lang)
+                    matched = True
+                    break
+            if not matched:
+                for possible_lang in possible_languages:
+                    if possible_lang.lower() in lang.lower():
+                        detected_languages.append(possible_lang)
+                        break
+        detected_languages = list(set(detected_languages))
+        return detected_languages
+
+
+    all_55000_steam['languages_cleaned'] = all_55000_steam['languages'].apply(clean_languages)
+    mlb = MultiLabelBinarizer()
+
+    languages_encoded = mlb.fit_transform(all_55000_steam['languages_cleaned'])
+    languages_df = pd.DataFrame(languages_encoded, columns=mlb.classes_, index=all_55000_steam.index)
+
+    all_55000_steam = pd.concat([all_55000_steam, languages_df], axis=1)
+    all_55000_steam = all_55000_steam.drop('languages_cleaned', axis=1)
+    all_55000_steam['languages_supported'] = languages_df.sum(axis=1)
+    return all_55000_steam
+
+modeling_copy = all_55000_steam.copy()
+modeling_copy = perform_additional_feature_engineering(modeling_copy)
+columns = list(modeling_copy.columns)
+
+idx_empty_string = columns.index('') # We have an empty string column for genre since some games don't have a genre attached
+idx_price_category_start = columns.index('price_category_Free to Play')
+idx_language_start = columns.index('Afrikaans')
+idx_languages_supported = columns.index('languages_supported')
+
+
+genres_columns = columns[idx_empty_string:idx_price_category_start]
+price_category_columns = columns[idx_price_category_start:idx_language_start]
+languages_columns = columns[idx_language_start:idx_languages_supported]
+
+# Additional features (confounders)
+additional_features = ['developer_experience', 'publisher_experience', 'languages_supported']
+feature_columns = additional_features + price_category_columns + genres_columns + languages_columns
+# Target
+target_column = 'total_review_count'
+
+data = modeling_copy[feature_columns + [target_column]]
+print(data.shape)
+print(data.columns.values)
+
+# Separate features and target
+X = data[feature_columns]
+y = data[target_column]
+
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+import xgboost as xgb
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1111)
+
+# Linear Regression Model ------------------------------
+lr_model = LinearRegression()
+lr_model.fit(X_train, y_train)
+y_pred_lr = lr_model.predict(X_test)
+mse_lr = mean_squared_error(y_test, y_pred_lr)
+r2_lr = r2_score(y_test, y_pred_lr)
+# print("Linear Regression MSE:", mse_lr)
+# print("Linear Regression R^2:", r2_lr)
+
+# Random Forest Regressor Model ------------------------------
+rf_model = RandomForestRegressor(random_state=1111)
+rf_model.fit(X_train, y_train)
+y_pred_rf = rf_model.predict(X_test)
+mse_rf = mean_squared_error(y_test, y_pred_rf)
+r2_rf = r2_score(y_test, y_pred_rf)
+
+# print("Random Forest MSE:", mse_rf)
+# print("Random Forest R^2:", r2_rf)
+
+# XGBoost Regressor Model ------------------------------------
+xgb_model = xgb.XGBRegressor(random_state=1111)
+xgb_model.fit(X_train, y_train)
+y_pred_xgb = xgb_model.predict(X_test)
+mse_xgb = mean_squared_error(y_test, y_pred_xgb)
+r2_xgb = r2_score(y_test, y_pred_xgb)
+
+# print("XGBoost MSE:", mse_xgb)
+# print("XGBoost R^2:", r2_xgb)
+
+# Random Forest feature importance
+importances_rf = rf_model.feature_importances_
+feature_importance_rf = pd.Series(importances_rf, index=feature_columns).sort_values(ascending=False)
+
+# print("Random Forest Feature Importances:")
+# print(feature_importance_rf.head(10))
+
+# XGBoost feature importance
+importances_xgb = xgb_model.feature_importances_
+feature_importance_xgb = pd.Series(importances_xgb, index=feature_columns).sort_values(ascending=False)
+
+# print("XGBoost Feature Importances:")
+# print(feature_importance_xgb.head(10))
+
+st.write(
+    """
+    Results:
+    """
+)
+
+# Metrics
+metrics_data = {
+    "Model": ["Linear Regression", "Random Forest", "XGBoost"],
+    "MSE": [mse_lr, mse_rf, mse_xgb],
+    "R²": [r2_lr, r2_rf, r2_xgb]
+}
+
+metrics_df = pd.DataFrame(metrics_data)
+
+# # Get coefficients
+# coefficients = lr_model.coef_
+
+# # Map coefficients to feature names
+# coefficients_df = pd.DataFrame({
+#     "Feature": X.columns,
+#     "Coefficient": coefficients
+# })
+
+# # Extract coefficient for "developer_experience"
+# developer_experience_coef = coefficients_df.loc[coefficients_df["Feature"] == "developer_experience", "Coefficient"].values[0]
+
+# # Display result
+# st.write(f"Coefficient for developer_experience: {developer_experience_coef}")
+
+st.subheader("Model Performance Metrics")
+st.table(metrics_df)
+
+# Feature Importances
+# Random Forest
+st.subheader("Random Forest Feature Importances")
+st.table(feature_importance_rf.head(10))
+
+# XGBoost
+st.subheader("XGBoost Feature Importances")
+st.table(feature_importance_xgb.head(10))
+
+st.write(
+    """
+    """
+)
         
     # with st.container(border=True):
     #     st.write(
